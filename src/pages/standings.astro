@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import standingsIllustration from '../assets/standings.png';
+import DemoNotice from '../components/DemoNotice.astro';
+import Standings from '../components/Standings';
+import { getTournamentData } from '../data/tournament';
+const data = await getTournamentData();
+---
+
+<Layout title="Standings" active="standings">
+  <div class="wrap interior-page">
+    <header class="page-heading">
+      <h1>Standings</h1>
+      <Image
+        src={standingsIllustration}
+        alt=""
+        width={134}
+        height={134}
+        widths={[134, 268, 402]}
+        sizes="(min-width: 600px) 134px, 112px"
+        loading="eager"
+      />
+    </header>
+    <DemoNotice />
+    <Standings {...data} client:load />
+    <noscript>
+      <p class="noscript-notice">
+        Enable JavaScript to filter the standings by pool. All sample pool
+        standings are shown above.
+      </p>
+    </noscript>
+  </div>
+</Layout>

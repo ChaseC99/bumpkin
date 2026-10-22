@@ -1,0 +1,79 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon';
+import { event } from '../data/tournament';
+const details = [
+  {
+    icon: 'calendar',
+    label: 'Date',
+    value: event.shortDate,
+    note: 'Weather permitting',
+  },
+  { icon: 'clock', label: 'Time', value: event.time, note: 'Tentative' },
+  {
+    icon: 'pin',
+    label: 'Location',
+    value: 'TBD · Sunnyvale area',
+    note: 'A park in or near Sunnyvale',
+  },
+  { icon: 'ball', label: 'Volleyball', value: 'Grass 4 × 4 · 9 teams' },
+  { icon: 'ghost', label: 'Dress code', value: 'Costumes encouraged' },
+] as const;
+---
+
+<Layout active="info">
+  <div class="wrap info-page">
+    <header class="event-intro">
+      <h1>
+        Bump-kin
+        <br />
+        Set Latte
+      </h1>
+      <img
+        src="/images/halloween-volleyball.png"
+        alt="A pumpkin and ghost playing volleyball."
+        width="1280"
+        height="1280"
+        fetchpriority="high"
+      />
+    </header>
+    <section class="info-card" aria-label="Event details">
+      <dl class="event-details">
+        {details.map((item) => (
+          <div class="event-row">
+            <dt>
+              <Icon name={item.icon} size={21} />
+              <span>{item.label}</span>
+            </dt>
+            <dd>
+              <span>{item.value}</span>
+              {'note' in item && <small>{item.note}</small>}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+    <section class="info-section">
+      <h2>Teams & format</h2>
+      <p>
+        The night before the tournament, each pair will be randomly matched with
+        another pair to form a team of four. Teams stay together for the day.
+      </p>
+      <p>
+        Pool play will be followed by playoffs. The schedule, scoring rules, and
+        playoff format are still being finalized.
+      </p>
+    </section>
+    <section class="info-section">
+      <h2>What to bring</h2>
+      <ul class="packing-list">
+        <li>Water & snacks</li>
+        <li>Sunscreen</li>
+        <li>Layers & extra socks</li>
+        <li>A chair or blanket</li>
+        <li>A volleyball</li>
+        <li>Your costume</li>
+      </ul>
+    </section>
+  </div>
+</Layout>
