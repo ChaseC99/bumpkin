@@ -1,9 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" fill="#eb763d" />
-  <g transform="translate(4.8 4.8) scale(.85)" fill="none" stroke="#253b2f" stroke-width="3.5" stroke-linecap="round">
-    <path d="M32 18v-7l6-2" />
-    <ellipse cx="32" cy="36" rx="23" ry="18" />
-    <ellipse cx="32" cy="36" rx="11" ry="18" />
-    <path d="m18 32 5 2m23-2-5 2m-14 9h10" />
+  <rect width="64" height="64" fill="#faf8f4" />
+  <g transform="translate(6.4 6.4) scale(.8)">
+    <title>Jack-o'-lantern volleyball</title>
+      <!-- A broad stem and bold face stay legible at browser-tab sizes. -->
+      <path d="M28 15c-1-6 2-11 8-13l5 4c-5 1-7 5-7 10Z" fill="#597349" stroke="#253b2f" stroke-width="2.5" stroke-linejoin="round" />
+      <circle cx="32" cy="35" r="25.5" fill="#f28b3d" />
+      <!-- Three curved panel groups echo the site's volleyball navigation icon. -->
+      <g fill="#f9a94f">
+        <path d="M32 9.5C25.4 17.9 25.7 27.3 32 35c-8.4 5.7-18 5.2-25-1.6A25.5 25.5 0 0 1 32 9.5Z" />
+        <path d="M32 9.5C25.4 17.9 25.7 27.3 32 35c-8.4 5.7-18 5.2-25-1.6A25.5 25.5 0 0 1 32 9.5Z" transform="rotate(120 32 35)" />
+        <path d="M32 9.5C25.4 17.9 25.7 27.3 32 35c-8.4 5.7-18 5.2-25-1.6A25.5 25.5 0 0 1 32 9.5Z" transform="rotate(240 32 35)" />
+      </g>
+      <g fill="none" stroke="#b45427" stroke-width="2" stroke-linecap="round">
+        <path d="M32 9.5C25.4 17.9 25.7 27.3 32 35M27.15 22.51c10.36-1.85 21.39.91 29.96 8.08" />
+        <path d="M32 9.5C25.4 17.9 25.7 27.3 32 35M27.15 22.51c10.36-1.85 21.39.91 29.96 8.08" transform="rotate(120 32 35)" />
+        <path d="M32 9.5C25.4 17.9 25.7 27.3 32 35M27.15 22.51c10.36-1.85 21.39.91 29.96 8.08" transform="rotate(240 32 35)" />
+      </g>
+      <circle cx="32" cy="35" r="25.5" fill="none" stroke="#253b2f" stroke-width="3" />
+      <g fill="#253b2f" stroke="#f9a94f" stroke-width="1.2" stroke-linejoin="round" paint-order="stroke">
+        <path d="m21 25 8 10H16Zm22 0 5 10H35Z" />
+        <path d="M17 40h9v5h6v-5h15c-2 9-8 14-15 14s-13-5-15-14Z" />
+      </g>
   </g>
 </svg>

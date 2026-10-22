@@ -54,4 +54,4 @@ Replace the sample data adapter with Supabase reads using the same `Team`, `Matc
 
 The site uses native system fonts, a warm Halloween palette, and a fixed bottom tab bar with safe-area spacing. Page headers pair a title with a small illustration; copy stays focused on tournament information.
 
-UI icons are inline SVG in [`src/components/Icon.tsx`](src/components/Icon.tsx). The Schedule tab uses our own three-panel volleyball drawing, defined under `ball`. It has no external icon library dependency or third-party icon attribution. Home screen PNGs are exported from the original SVG sources in [`public/icons/`](public/icons/).
+UI icons are inline SVG in [`src/components/Icon.tsx`](src/components/Icon.tsx). The Schedule tab uses our own three-panel volleyball drawing, defined under `ball`. It has no external icon library dependency or third-party icon attribution. The favicon in [`public/favicon.svg`](public/favicon.svg) combines a jack-o'-lantern face with curved volleyball panels. Matching home screen PNGs are exported from the SVG sources in [`public/icons/`](public/icons/), with extra padding in the maskable version.
