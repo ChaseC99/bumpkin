@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Match, TournamentData } from '../data/tournament';
-import { filterMatches, formatTime } from '../lib/tournament';
+import { buildPlayoffSchedule, filterMatches, formatTime } from '../lib/tournament';
 import Icon from './Icon';
 import TeamBadge from './TeamBadge';
 
@@ -35,6 +35,8 @@ export default function Schedule({ teams, matches }: TournamentData) {
   }, [query, teamId, stage, ready]);
 
   const filtered = filterMatches(matches, teams, query, teamId, stage);
+  const playoffSchedule = buildPlayoffSchedule(teams, matches);
+  const matchCount = stage === 'playoff' ? playoffSchedule.games.length : filtered.length;
   const rounds = [...new Set(filtered.map((match) => match.round))];
   const hasFilters = Boolean(query || teamId || stage !== 'all');
   const clear = () => {
@@ -43,6 +45,39 @@ export default function Schedule({ teams, matches }: TournamentData) {
     setStage('all');
   };
   const selected = teams.find((team) => team.id === teamId);
+
+  const renderPlayoffGame = (game: (typeof playoffSchedule.games)[number]) => (
+    <article className="match-card" key={game.id}>
+      <div className="match-topline">
+        <span>
+          <span className="court-dot" />
+          Court {game.court}
+        </span>
+        <span className="match-status scheduled">Upcoming</span>
+      </div>
+      <p className="playoff-game-title">{game.title}</p>
+      {[game.home, game.away].map((participant, index) => {
+        const team = teams.find((candidate) => candidate.id === participant.teamId);
+        return (
+          <div className="match-team" key={`${game.id}-${index}`}>
+            {team ? (
+              <TeamBadge team={team} />
+            ) : (
+              <span className="team-badge playoff-placeholder">?</span>
+            )}
+            <div>
+              <h3>{team?.name ?? participant.label}</h3>
+              {team && <p>{team.players.map((name) => name.split(' ')[0]).join(' · ')}</p>}
+            </div>
+            <span className="match-score">
+              <span className="score-dash">—</span>
+            </span>
+          </div>
+        );
+      })}
+      <p className="match-referee">Ref: {game.referee}</p>
+    </article>
+  );
 
   const renderMatch = (match: Match) => {
     const home = teams.find((team) => team.id === match.homeId)!;
@@ -56,8 +91,7 @@ export default function Schedule({ teams, matches }: TournamentData) {
         <div className="match-topline">
           <span>
             <span className="court-dot" />
-            Court {match.court}{' '}
-            <span className="match-pool">· Pool {match.pool}</span>
+            Court {match.court}
           </span>
           <span className={`match-status ${match.status}`}>
             {match.status === 'final' ? (
@@ -103,6 +137,11 @@ export default function Schedule({ teams, matches }: TournamentData) {
             ))}
           </div>
         </details>
+        {match.refereeId && (
+          <p className="match-referee">
+            Ref: {teams.find((team) => team.id === match.refereeId)?.players.join(', ') ?? match.refereeId}
+          </p>
+        )}
       </article>
     );
   };
@@ -174,7 +213,7 @@ export default function Schedule({ teams, matches }: TournamentData) {
           ))}
         </div>
         <p className="results-count" role="status">
-          {filtered.length} sample {filtered.length === 1 ? 'match' : 'matches'}
+          {matchCount} sample {matchCount === 1 ? 'match' : 'matches'}
           {hasFilters && (
             <button onClick={clear}>
               Reset filters <Icon name="close" size={12} />
@@ -189,20 +228,32 @@ export default function Schedule({ teams, matches }: TournamentData) {
             <strong>{selected.name}</strong>
             <p>{selected.players.join(' · ')}</p>
           </div>
-          <span>POOL {selected.pool}</span>
+          <span>POOL PLAY</span>
         </div>
       )}
       {stage === 'playoff' ? (
-        <div className="empty-state playoff-state">
-          <span className="empty-icon">
-            <Icon name="trophy" size={38} />
-          </span>
-          <h2>Playoffs</h2>
-          <p>Bracket and match times to be confirmed.</p>
-          <button className="button secondary" onClick={() => setStage('pool')}>
-            View pool play <Icon name="arrow" size={18} />
-          </button>
-        </div>
+        <>
+          {!playoffSchedule.ready && (
+            <p className="section-note">Bracket seeding will be set after Pool Play is complete.</p>
+          )}
+          {[1, 2].map((round) => {
+            const games = playoffSchedule.games.filter((game) => game.round === round);
+            return (
+              <section className="round" key={round}>
+                <div className="round-heading">
+                  <h2>{formatTime(games[0].time)}</h2>
+                  <span>
+                    {round === 1
+                      ? 'Round 1 · 12:45–1:30'
+                      : 'Round 2 · 1:30–2:15'}
+                  </span>
+                  <div />
+                </div>
+                <div className="match-grid">{games.map(renderPlayoffGame)}</div>
+              </section>
+            );
+          })}
+        </>
       ) : filtered.length === 0 ? (
         <div className="empty-state">
           <span className="empty-icon">

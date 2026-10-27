@@ -24,21 +24,36 @@ const details = [
   {
     icon: 'ball',
     label: 'Volleyball',
-    value: `Grass 4 × 4 · ${event.teamCount} teams planned`,
+    value: `Grass 4 × 4 · 1 pool · 3 courts`,
   },
   { icon: 'ghost', label: 'Dress code', value: 'Costumes encouraged' },
 ] as const;
-const duos = [
-  { name: 'We suck @ Fishing', players: 'Alex & Will' },
-  { name: 'Magic Mike Shrooms', players: 'Justine & Ray' },
-  { name: 'idk', players: 'Jiwan & Allison' },
-  { name: 'LeBlock', players: 'Victor & Jacob' },
-  { name: 'Two Jump Chumps', players: 'Karan & Justin' },
-  { name: 'No u come up with one', players: 'Alice & Ash' },
-  { name: 'Magicpissers', players: 'Ajay & Jonathan C' },
-  { name: 'Canto Fiends', players: 'Miranda & Sara' },
-  { name: 'San Fran Spooks', players: 'Chase & Rachel' },
-  { name: 'Tyler + Chuds', players: 'David & Tyler' },
+const teams = [
+  {
+    name: 'Canto Fiends + Two Jump Chumps',
+    players: 'Miranda & Sara + Karan & Justin',
+  },
+  {
+    name: 'No u come up with one + San Fran Spooks',
+    players: 'Alice & Ash + Chase & Rachel',
+  },
+  { name: 'idk + Sung Jinwoo', players: 'Jiwan & Allison + Ryan V & Stacy' },
+  {
+    name: 'Magic Mike Shrooms + We suck @ Fishing',
+    players: 'Justine & Ray + Alex & Will',
+  },
+  {
+    name: 'LeBlock + Andre & Bryson',
+    players: 'Victor & Jacob + Andre & Bryson',
+  },
+  {
+    name: 'Tyler + Chuds + Jackie & Prajanya',
+    players: 'David & Tyler + Jackie & Prajanya',
+  },
+  {
+    name: 'Your Last 2 Braincells + Magicpissers',
+    players: 'Achinthya & Lucas + Ajay & Jonathan C',
+  },
 ];
 ---
 
@@ -122,8 +137,9 @@ const duos = [
           <div>
             <h3>Pool play</h3>
             <p>
-              Two pools of 3 and 4 teams. Play everyone in your pool, with
-              possible rematches in the smaller pool to balance games.
+              All seven teams share a single pool. Matches rotate across three
+              courts, with the round robin format building toward the playoff
+              stage.
             </p>
           </div>
         </li>
@@ -141,7 +157,7 @@ const duos = [
         </li>
       </ol>
       <p class="section-note">
-        7 teams planned · 25 players confirmed · 3 spots being filled
+        7 teams planned · 28 players confirmed
       </p>
     </section>
 
@@ -245,18 +261,18 @@ const duos = [
     <section class="info-section" aria-labelledby="duos-heading">
       <div class="section-heading">
         <Icon name="ghost" size={21} />
-        <h2 id="duos-heading">The duo lineup</h2>
-        <span class="section-count">10 confirmed</span>
+        <h2 id="duos-heading">The team lineup</h2>
+        <span class="section-count">7 confirmed</span>
       </div>
       <ol class="duo-list info-card">
-        {duos.map((duo, index) => (
+        {teams.map((team, index) => (
           <li>
             <span class="duo-number" aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </span>
             <div>
-              <h3>{duo.name}</h3>
-              <p>{duo.players}</p>
+              <h3>{team.name}</h3>
+              <p>{team.players}</p>
             </div>
           </li>
         ))}
