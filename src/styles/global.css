@@ -279,19 +279,225 @@ abbr {
 .info-section p + p {
   margin-top: 10px;
 }
-.packing-list {
+/* Compact cards for the tournament guide. */
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+}
+.section-heading > svg {
+  color: #a16c4d;
+}
+.section-heading h2 {
   margin: 0;
-  padding-left: 18px;
+}
+.section-count {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.weather-card {
+  margin-top: 18px;
+  padding: 22px;
+  border: 1px solid #dddce8;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #eeedf6, #f5f4f8);
+  color: #514c68;
+}
+.weather-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.weather-top h2 {
+  font-size: 13px;
+  font-weight: 650;
+}
+.weather-top p {
+  margin-top: 5px;
+  font-size: 15px;
+}
+.weather-top > svg {
+  color: #8d87a8;
+}
+.weather-reading {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 16px 0;
+}
+.weather-reading > strong {
+  font-size: 52px;
+  line-height: 1;
+  letter-spacing: -2px;
+  font-weight: 600;
+}
+.weather-reading strong span {
+  font-size: 28px;
+  letter-spacing: -1px;
+}
+.weather-reading > div {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 20px;
-  color: #5c625a;
+  gap: 4px;
+  font-size: 12px;
+}
+.weather-tip {
+  border-top: 1px solid #dcd9e8;
+  padding-top: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.weather-card small {
+  display: block;
+  margin-top: 7px;
+  font-size: 10px;
+  color: #706982;
+}
+.format-steps,
+.duo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 18px;
+}
+.format-steps li,
+.duo-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 18px 0;
+}
+.format-steps li + li,
+.duo-list li + li {
+  border-top: 1px solid var(--line);
+}
+.step-number,
+.duo-number {
+  color: #9d7155;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.info-section h3 {
   font-size: 14px;
   line-height: 1.45;
 }
-.packing-list li::marker {
-  color: #b4876a;
+.format-steps p,
+.house-rule p,
+.prize-list p,
+.duo-list p {
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.info-section .section-note {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.packing-list {
+  list-style: none;
+  margin: 0;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  color: #5c625a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.packing-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.packing-list svg {
+  margin-top: 2px;
+  color: #82916d;
+}
+.info-section .card-footer {
+  padding: 13px 18px;
+  background: #f4f5ee;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.house-rules {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+.house-rule {
+  padding: 18px;
+  background: #f7eee5;
+  border: 1px solid #eadbcd;
+  border-radius: 12px;
+}
+.rule-label {
+  display: block;
+  margin-bottom: 8px;
   font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #98603c;
+}
+.prize-list {
+  padding: 0 18px;
+}
+.prize-list > div {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 18px 0;
+}
+.prize-list > div + div {
+  border-top: 1px solid var(--line);
+}
+.prize-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  color: #9a753a;
+  background: #f7efdd;
+}
+.prize-list > div:nth-child(2) .prize-icon {
+  color: #7e658f;
+  background: #eee7f5;
+}
+.prize-list > div:nth-child(3) .prize-icon {
+  color: #667b50;
+  background: #eaf0df;
+}
+.duo-list li {
+  gap: 14px;
+  padding: 14px 0;
+}
+.duo-list h3 {
+  overflow-wrap: anywhere;
+}
+.duo-list p {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (min-width: 600px) {
+  .house-rules {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .duo-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+  .duo-list li:nth-child(2) {
+    border-top: 0;
+  }
 }
 
 /* Only the sample-data message remains as a page notice. */

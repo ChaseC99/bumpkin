@@ -24,6 +24,7 @@ export type IconName =
   | 'close'
   | 'heart'
   | 'sun'
+  | 'cloud'
   | 'bag'
   | 'water';
 const paths: Record<IconName, React.ReactNode> = {
@@ -134,6 +135,9 @@ const paths: Record<IconName, React.ReactNode> = {
       <circle cx="12" cy="12" r="4" />
       <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1 1m12 12 1 1M5 19l1-1M18 6l1-1" />
     </>
+  ),
+  cloud: (
+    <path d="M7 19a5 5 0 1 1 .5-10A7 7 0 0 1 21 12a3.5 3.5 0 0 1-1.5 7H7Z" />
   ),
   bag: (
     <>

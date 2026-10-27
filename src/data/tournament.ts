@@ -42,9 +42,9 @@ export const event = {
   name: 'Bump-kin Set Latte',
   date: 'Saturday, October 31, 2026',
   shortDate: 'Saturday, October 31',
-  time: '9 am – 4 pm',
-  location: 'Sunnyvale area',
-  teamCount: 9,
+  time: '~9:30 am – 4:30 pm',
+  location: 'Las Palmas or Washington Park',
+  teamCount: 7,
   format: 'Grass volleyball · 4 × 4',
 } as const;
 

@@ -9,16 +9,37 @@ const details = [
     value: event.shortDate,
     note: 'Weather permitting',
   },
-  { icon: 'clock', label: 'Time', value: event.time, note: 'Tentative' },
+  {
+    icon: 'clock',
+    label: 'Time',
+    value: event.time,
+    note: 'Plan for a full day',
+  },
   {
     icon: 'pin',
     label: 'Location',
-    value: 'TBD · Sunnyvale area',
-    note: 'A park in or near Sunnyvale',
+    value: event.location,
+    note: 'Tentative, based on field availability',
   },
-  { icon: 'ball', label: 'Volleyball', value: 'Grass 4 × 4 · 9 teams' },
+  {
+    icon: 'ball',
+    label: 'Volleyball',
+    value: `Grass 4 × 4 · ${event.teamCount} teams planned`,
+  },
   { icon: 'ghost', label: 'Dress code', value: 'Costumes encouraged' },
 ] as const;
+const duos = [
+  { name: 'We suck @ Fishing', players: 'Alex & Will' },
+  { name: 'Magic Mike Shrooms', players: 'Justine & Ray' },
+  { name: 'idk', players: 'Jiwan & Allison' },
+  { name: 'LeBlock', players: 'Victor & Jacob' },
+  { name: 'Two Jump Chumps', players: 'Karan & Justin' },
+  { name: 'No u come up with one', players: 'Alice & Ash' },
+  { name: 'Magicpissers', players: 'Ajay & Jonathan C' },
+  { name: 'Canto Fiends', players: 'Miranda & Sara' },
+  { name: 'San Fran Spooks', players: 'Chase & Rachel' },
+  { name: 'Tyler + Chuds', players: 'David & Tyler' },
+];
 ---
 
 <Layout active="info">
@@ -53,27 +74,193 @@ const details = [
         ))}
       </dl>
     </section>
-    <section class="info-section">
-      <h2>Teams & format</h2>
-      <p>
-        The night before the tournament, each pair will be randomly matched with
-        another pair to form a team of four. Teams stay together for the day.
+    <section class="weather-card" aria-labelledby="weather-heading">
+      <div class="weather-top">
+        <div>
+          <h2 id="weather-heading">Saturday forecast</h2>
+          <p>Cloudy skies. Cozy layers.</p>
+        </div>
+        <Icon name="cloud" size={44} />
+      </div>
+      <div class="weather-reading">
+        <strong>
+          62<span>°F</span>
+        </strong>
+        <div>
+          <span>Forecast high</span>
+          <span>No rain expected</span>
+        </div>
+      </div>
+      <p class="weather-tip">
+        Chilly morning, possibly wet grass. Bring layers for the sidelines.
       </p>
-      <p>
-        Pool play will be followed by playoffs. The schedule, scoring rules, and
-        playoff format are still being finalized.
+      <small>Forecast from the organizer's latest update.</small>
+    </section>
+
+    <section class="info-section" aria-labelledby="format-heading">
+      <div class="section-heading">
+        <Icon name="ball" size={21} />
+        <h2 id="format-heading">How the day works</h2>
+      </div>
+      <ol class="format-steps info-card">
+        <li>
+          <span class="step-number" aria-hidden="true">
+            01
+          </span>
+          <div>
+            <h3>Two duos, one team</h3>
+            <p>
+              Pair up with another duo. Your team of four stays together all
+              day.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="step-number" aria-hidden="true">
+            02
+          </span>
+          <div>
+            <h3>Pool play</h3>
+            <p>
+              Two pools of 3 and 4 teams. Play everyone in your pool, with
+              possible rematches in the smaller pool to balance games.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="step-number" aria-hidden="true">
+            03
+          </span>
+          <div>
+            <h3>Playoffs & prizes</h3>
+            <p>
+              Pool results place you in the upper or lower bracket. First place
+              in each takes home a prize.
+            </p>
+          </div>
+        </li>
+      </ol>
+      <p class="section-note">
+        7 teams planned · 25 players confirmed · 3 spots being filled
       </p>
     </section>
-    <section class="info-section">
-      <h2>What to bring</h2>
-      <ul class="packing-list">
-        <li>Water & snacks</li>
-        <li>Sunscreen</li>
-        <li>Layers & extra socks</li>
-        <li>A chair or blanket</li>
-        <li>A volleyball</li>
-        <li>Your costume</li>
-      </ul>
+
+    <section class="info-section" aria-labelledby="packing-heading">
+      <div class="section-heading">
+        <Icon name="bag" size={21} />
+        <h2 id="packing-heading">Pack for the day</h2>
+      </div>
+      <div class="info-card packing-card">
+        <ul class="packing-list">
+          {[
+            'Costume & layers',
+            'Water & snacks',
+            'Sunscreen & sunglasses',
+            'Chair & picnic blanket',
+            'Volleyballs',
+            'Canopy, if you have one',
+          ].map((item) => (
+            <li>
+              <Icon name="check" size={16} />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="card-footer">
+          Let's make a mega canopy! Net owners: the organizer will coordinate
+          with you directly.
+        </p>
+      </div>
+    </section>
+
+    <section class="info-section" aria-labelledby="rules-heading">
+      <div class="section-heading">
+        <Icon name="info" size={21} />
+        <h2 id="rules-heading">Court etiquette</h2>
+      </div>
+      <p>
+        Standard outdoor rules. Call your own open hand receives and doubles
+        honestly, stay out of neighboring courts, and play safe.
+      </p>
+      <div class="house-rules">
+        <div class="house-rule">
+          <span class="rule-label">House rule 01</span>
+          <h3>Accidental rollover</h3>
+          <p>
+            Win a point, then accidentally roll the ball across the net's plane
+            to the other team? You lose that point, and they serve.
+          </p>
+        </div>
+        <div class="house-rule">
+          <span class="rule-label">House rule 02</span>
+          <h3>Jump serve gamble</h3>
+          <p>
+            Jump serves are welcome. Miss one into the net or out of bounds, and
+            your team gets <strong>−1 point.</strong>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="info-section" aria-labelledby="prizes-heading">
+      <div class="section-heading">
+        <Icon name="trophy" size={21} />
+        <h2 id="prizes-heading">Up for grabs</h2>
+      </div>
+      <div class="info-card prize-list">
+        <div>
+          <span class="prize-icon">
+            <Icon name="trophy" size={22} />
+          </span>
+          <div>
+            <h3>Bracket champions</h3>
+            <p>First place in both the upper & lower brackets.</p>
+          </div>
+        </div>
+        <div>
+          <span class="prize-icon">
+            <Icon name="ghost" size={22} />
+          </span>
+          <div>
+            <h3>Best costume</h3>
+            <p>
+              Individual or duo, decided by vote. Group costumes encouraged!
+            </p>
+          </div>
+        </div>
+        <div>
+          <span class="prize-icon">
+            <Icon name="sparkles" size={22} />
+          </span>
+          <div>
+            <h3>Two mystery awards</h3>
+            <p>
+              Individual / duo votes. Categories revealed on tournament day.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="info-section" aria-labelledby="duos-heading">
+      <div class="section-heading">
+        <Icon name="ghost" size={21} />
+        <h2 id="duos-heading">The duo lineup</h2>
+        <span class="section-count">10 confirmed</span>
+      </div>
+      <ol class="duo-list info-card">
+        {duos.map((duo, index) => (
+          <li>
+            <span class="duo-number" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <div>
+              <h3>{duo.name}</h3>
+              <p>{duo.players}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </section>
   </div>
 </Layout>
