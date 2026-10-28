@@ -131,9 +131,10 @@ test('playoffs seed 1v4, 2v3, and 6v7, with seed 5 refereeing', () => {
       [3, standings[5].team.id, standings[6].team.id],
     ],
   );
-  assert.equal(roundOne[0].time, '12:45');
+  assert.equal(roundOne[0].time, '13:30');
+  assert.ok(roundOne.every((game) => game.time === '13:30'));
   assert.equal(roundOne[0].referee, standings[4].team.players.join(', '));
-  assert.equal(schedule.games.find((game) => game.round === 2)?.time, '13:30');
+  assert.equal(schedule.games.find((game) => game.round === 2)?.time, '14:30');
   assert.equal(schedule.games.find((game) => game.round === 2)?.referee, 'TBD');
 });
 

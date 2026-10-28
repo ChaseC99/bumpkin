@@ -16,7 +16,7 @@ export default function Standings({ teams, matches }: TournamentData) {
         <div className="table-scroll">
           <table>
             <caption className="sr-only">
-              Sample pool standings ranked by win percentage, then point difference.
+              Pool Play standings ranked by win percentage, then point difference.
               Select a team name for its roster.
             </caption>
             <thead>

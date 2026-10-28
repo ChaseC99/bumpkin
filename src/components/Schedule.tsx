@@ -213,7 +213,7 @@ export default function Schedule({ teams, matches }: TournamentData) {
           ))}
         </div>
         <p className="results-count" role="status">
-          {matchCount} sample {matchCount === 1 ? 'match' : 'matches'}
+          {matchCount} {matchCount === 1 ? 'match' : 'matches'}
           {hasFilters && (
             <button onClick={clear}>
               Reset filters <Icon name="close" size={12} />
@@ -231,6 +231,15 @@ export default function Schedule({ teams, matches }: TournamentData) {
           <span>POOL PLAY</span>
         </div>
       )}
+      <aside className="players-meeting" aria-labelledby="players-meeting-heading">
+        <Icon name="clock" size={22} />
+        <div>
+          <h2 id="players-meeting-heading">9:30 am · Players' meeting & check-in</h2>
+          <p>
+            <strong>All players must check in.</strong> Games begin at 10:00 am.
+          </p>
+        </div>
+      </aside>
       {stage === 'playoff' ? (
         <>
           {!playoffSchedule.ready && (
@@ -244,8 +253,8 @@ export default function Schedule({ teams, matches }: TournamentData) {
                   <h2>{formatTime(games[0].time)}</h2>
                   <span>
                     {round === 1
-                      ? 'Round 1 · 12:45–1:30'
-                      : 'Round 2 · 1:30–2:15'}
+                      ? 'Round 1 · 1:30–2:30'
+                      : 'Round 2 · 2:30–3:30'}
                   </span>
                   <div />
                 </div>
@@ -253,6 +262,7 @@ export default function Schedule({ teams, matches }: TournamentData) {
               </section>
             );
           })}
+          <p className="section-note">Awards ceremony · 3:30–4:00 pm</p>
         </>
       ) : filtered.length === 0 ? (
         <div className="empty-state">

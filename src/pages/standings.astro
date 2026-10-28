@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import standingsIllustration from '../assets/standings.png';
-import DemoNotice from '../components/DemoNotice.astro';
 import Standings from '../components/Standings';
 import { getTournamentData } from '../data/tournament';
 const data = await getTournamentData();
@@ -22,12 +21,11 @@ const data = await getTournamentData();
         loading="eager"
       />
     </header>
-    <DemoNotice />
     <Standings {...data} client:load />
     <noscript>
       <p class="noscript-notice">
-        Enable JavaScript to filter the standings by pool. All sample pool
-        standings are shown above.
+        Enable JavaScript to view the interactive standings. Pool Play standings
+        are shown above.
       </p>
     </noscript>
   </div>

@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import scheduleIllustration from '../assets/schedule.png';
-import DemoNotice from '../components/DemoNotice.astro';
 import Schedule from '../components/Schedule';
 import { getTournamentData } from '../data/tournament';
 const data = await getTournamentData();
@@ -22,12 +21,11 @@ const data = await getTournamentData();
         loading="eager"
       />
     </header>
-    <DemoNotice />
     <Schedule {...data} client:load />
     <noscript>
       <p class="noscript-notice">
         Enable JavaScript to search teams, filter matches, and view playoff
-        details. The sample matches are listed above.
+        details. The match schedule is listed above.
       </p>
     </noscript>
   </div>

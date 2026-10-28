@@ -139,11 +139,11 @@ export function buildPlayoffSchedule(
   return {
     ready,
     games: [
-      game('playoff-r1-c1', 1, '12:45', 1, 'Upper bracket · Semifinal 1', participant(standings[0], 1), participant(standings[3], 4)),
-      game('playoff-r1-c2', 1, '12:45', 2, 'Upper bracket · Semifinal 2', participant(standings[1], 2), participant(standings[2], 3)),
-      game('playoff-r1-c3', 1, '12:45', 3, 'Lower bracket · Semifinal', participant(standings[5], 6), participant(standings[6], 7)),
-      game('playoff-r2-c1', 2, '13:30', 1, 'Upper bracket championship', winner('Winner of upper semifinal 1'), winner('Winner of upper semifinal 2')),
-      game('playoff-r2-c2', 2, '13:30', 2, 'Lower bracket championship', participant(standings[4], 5), winner('Winner of lower semifinal')),
+      game('playoff-r1-c1', 1, '13:30', 1, 'Upper bracket · Semifinal 1', participant(standings[0], 1), participant(standings[3], 4)),
+      game('playoff-r1-c2', 1, '13:30', 2, 'Upper bracket · Semifinal 2', participant(standings[1], 2), participant(standings[2], 3)),
+      game('playoff-r1-c3', 1, '13:30', 3, 'Lower bracket · Semifinal', participant(standings[5], 6), participant(standings[6], 7)),
+      game('playoff-r2-c1', 2, '14:30', 1, 'Upper bracket championship', winner('Winner of upper semifinal 1'), winner('Winner of upper semifinal 2')),
+      game('playoff-r2-c2', 2, '14:30', 2, 'Lower bracket championship', participant(standings[4], 5), winner('Winner of lower semifinal')),
     ],
   };
 }
