@@ -26,6 +26,7 @@ export type IconName =
   | 'sun'
   | 'cloud'
   | 'bag'
+  | 'whistle'
   | 'water';
 const paths: Record<IconName, React.ReactNode> = {
   // Original three-panel volleyball, drawn for this project.
@@ -148,6 +149,13 @@ const paths: Record<IconName, React.ReactNode> = {
   water: (
     <>
       <path d="M9 3h6v4l2 3v10H7V10l2-3V3Zm0 0h6M7 14h10" />
+    </>
+  ),
+  whistle: (
+    <>
+      <path d="M16 9h5v4h-5a6 6 0 1 1-6-6h3v2Z" />
+      <circle cx="10" cy="13" r="2" />
+      <path d="m16 3-1 2m5 0-2 1" />
     </>
   ),
 };

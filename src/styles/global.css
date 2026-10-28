@@ -722,6 +722,7 @@ abbr {
 .match-grid {
   display: grid;
   grid-template-columns: 1fr;
+  align-items: start;
   gap: 12px;
 }
 .match-card {
@@ -837,31 +838,36 @@ abbr {
   font-size: 18px;
   color: #aaa;
 }
-.roster-details {
+.match-referee {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: 12px;
+  margin-inline: -16px;
+  padding: 12px 16px;
   border-top: 1px solid var(--line);
+  border-radius: 0 0 11px 11px;
+  background: var(--paper);
 }
-.roster-details summary {
-  min-height: 44px;
-  display: flex;
+.match-referee-label {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 6px;
   color: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.match-referee-label svg {
+  align-self: center;
+  color: #667b50;
+}
+.match-referee-names {
+  color: var(--ink);
   font-size: 12px;
-}
-.roster-list {
-  padding: 0 0 16px;
-  font-size: 12px;
-}
-.roster-list > div + div {
-  margin-top: 12px;
-}
-.roster-list strong {
-  font-weight: 600;
-}
-.roster-list p {
-  margin-top: 4px;
-  line-height: 1.6;
-  color: var(--muted);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 .empty-state {
   text-align: center;

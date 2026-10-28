@@ -165,13 +165,13 @@ export function filterMatches(
   const terms = normalize(query).split(/\s+/).filter(Boolean);
   return matches.filter((match) => {
     if (stage !== 'all' && stage !== match.stage) return false;
-    if (teamId && match.homeId !== teamId && match.awayId !== teamId)
-      return false;
-    const participants = teams.filter(
-      (team) => team.id === match.homeId || team.id === match.awayId,
+    const assignedTeamIds = [match.homeId, match.awayId, match.refereeId];
+    if (teamId && !assignedTeamIds.includes(teamId)) return false;
+    const assignedTeams = teams.filter(
+      (team) => assignedTeamIds.includes(team.id),
     );
     const searchable = normalize(
-      participants.flatMap((team) => [team.name, ...team.players]).join(' '),
+      assignedTeams.flatMap((team) => [team.name, ...team.players]).join(' '),
     );
     return terms.every((term) => searchable.includes(term));
   });

@@ -4,6 +4,18 @@ import { buildPlayoffSchedule, filterMatches, formatTime } from '../lib/tourname
 import Icon from './Icon';
 import TeamBadge from './TeamBadge';
 
+function RefereeFooter({ assignment }: { assignment: string }) {
+  return (
+    <footer className="match-referee">
+      <span className="match-referee-label">
+        <Icon name="whistle" size={16} />
+        Referees
+      </span>
+      <p className="match-referee-names">{assignment}</p>
+    </footer>
+  );
+}
+
 export default function Schedule({ teams, matches }: TournamentData) {
   const [query, setQuery] = useState('');
   const [teamId, setTeamId] = useState('');
@@ -75,7 +87,7 @@ export default function Schedule({ teams, matches }: TournamentData) {
           </div>
         );
       })}
-      <p className="match-referee">Ref: {game.referee}</p>
+      <RefereeFooter assignment={game.referee.replaceAll(', ', ' · ')} />
     </article>
   );
 
@@ -124,23 +136,10 @@ export default function Schedule({ teams, matches }: TournamentData) {
             </span>
           </div>
         ))}
-        <details className="roster-details">
-          <summary>
-            Players <Icon name="chevron" size={15} />
-          </summary>
-          <div className="roster-list">
-            {[home, away].map((team) => (
-              <div key={team.id}>
-                <strong>{team.name}</strong>
-                <p>{team.players.join(', ')}</p>
-              </div>
-            ))}
-          </div>
-        </details>
         {match.refereeId && (
-          <p className="match-referee">
-            Ref: {teams.find((team) => team.id === match.refereeId)?.players.join(', ') ?? match.refereeId}
-          </p>
+          <RefereeFooter
+            assignment={teams.find((team) => team.id === match.refereeId)?.players.join(' · ') ?? match.refereeId}
+          />
         )}
       </article>
     );

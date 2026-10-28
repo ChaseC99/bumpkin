@@ -90,20 +90,51 @@ test('equivalent records share a rank with competition numbering', () => {
 
 test('search supports partial names, case, whitespace, and intersecting filters', () => {
   assert.equal(
-    filterMatches(matches, teams, '  alex  ', '', 'all').length,
-    3,
+    filterMatches(matches, teams, '  ALÉ  ', '', 'all').length,
+    5,
   );
-  assert.equal(filterMatches(matches, teams, 'fishing', '', 'pool').length, 3);
+  assert.equal(filterMatches(matches, teams, 'fishing', '', 'pool').length, 5);
+  assert.deepEqual(
+    filterMatches(matches, teams, 'allison', 't4', 'all').map((match) => match.id),
+    ['r3-c2'],
+  );
   assert.equal(
-    filterMatches(matches, teams, 'allison', 't4', 'all').length,
+    filterMatches(matches, teams, 'allison', 't1', 'all').length,
     0,
   );
-  assert.equal(filterMatches(matches, teams, '', 't4', 'all').length, 3);
+  assert.equal(filterMatches(matches, teams, '', 't4', 'all').length, 5);
   assert.equal(filterMatches(matches, teams, '', '', 'playoff').length, 0);
   assert.equal(
     filterMatches(matches, teams, 'not a player', '', 'all').length,
     0,
   );
+});
+
+test('player search and team filters include playing and refereeing assignments', () => {
+  const expected = ['r1-c2', 'r2-c2', 'r3-c1', 'r3-c2', 'r3-c3', 'r4-c2'];
+  assert.deepEqual(
+    filterMatches(matches, teams, 'chase', '', 'all').map((match) => match.id),
+    expected,
+  );
+  assert.deepEqual(
+    filterMatches(matches, teams, '', 't2', 'pool').map((match) => match.id),
+    expected,
+  );
+  assert.deepEqual(
+    filterMatches(matches, teams, 'chase', 't2', 'pool').map((match) => match.id),
+    expected,
+  );
+  assert.deepEqual(
+    filterMatches(matches, teams, 'chase', 't1', 'all').map((match) => match.id),
+    ['r3-c1'],
+  );
+  assert.equal(filterMatches(matches, teams, 'chase', '', 'playoff').length, 0);
+});
+
+test('games without a referee remain searchable by their players', () => {
+  const unassigned = [{ ...matches[0], refereeId: undefined }];
+  assert.equal(filterMatches(unassigned, teams, 'miranda', '', 'all').length, 1);
+  assert.equal(filterMatches(unassigned, teams, 'achinthya', '', 'all').length, 0);
 });
 
 test('times format as local tournament times without a browser timezone shift', () => {
