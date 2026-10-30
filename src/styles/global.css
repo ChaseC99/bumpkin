@@ -265,6 +265,25 @@ abbr {
   font-size: 12px;
   font-weight: 400;
 }
+.event-row small.warning-note {
+  display: block;
+  margin-top: 8px;
+  color: #b42318;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+.schedule-warning {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border: 1px solid #f0d5ba;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #fff9f3 0%, #fff3e9 100%);
+  color: #9a4d21;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.5;
+}
 .info-section {
   margin-top: 28px;
 }
@@ -396,6 +415,28 @@ abbr {
   margin-top: 10px;
   font-size: 11px;
   color: var(--muted);
+}
+.rules-link {
+  margin-top: 12px;
+}
+.rules-link a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 16px;
+  border-radius: 999px;
+  border: 1px solid #f0d5ba;
+  background: linear-gradient(180deg, #fff9f3 0%, #fff3e9 100%);
+  color: var(--orange);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  box-shadow: 0 2px 8px rgba(189, 87, 37, 0.08);
+}
+.rules-link a:hover,
+.rules-link a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .packing-list {
   list-style: none;

@@ -21,6 +21,9 @@ const data = await getTournamentData();
         loading="eager"
       />
     </header>
+    <p class="schedule-warning">
+      Warning: if you show up after 9:30 am, a mystery punishment awaits.
+    </p>
     <Schedule {...data} client:load />
     <noscript>
       <p class="noscript-notice">

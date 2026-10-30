@@ -14,6 +14,7 @@ const details = [
     label: 'Time',
     value: event.time,
     note: 'Players meeting at 9:30 · games start at 10:00',
+    warning: 'Warning: if you show up after 9:30 am, a mystery punishment awaits.',
   },
   {
     icon: 'pin',
@@ -83,6 +84,7 @@ const teams = [
             <dd>
               <span>{item.value}</span>
               {'note' in item && <small>{item.note}</small>}
+              {'warning' in item && <small class="warning-note">{item.warning}</small>}
             </dd>
           </div>
         ))}
@@ -196,6 +198,15 @@ const teams = [
       <p>
         Standard outdoor rules. Call your own open hand receives and doubles
         honestly, stay out of neighboring courts, and play safe.
+      </p>
+      <p class="rules-link">
+        <a
+          href="https://docs.google.com/document/d/1SNM4GeuPH_XIIaAObCw3xNWCvBsJDszBgqwJXMdS2sE/edit?usp=sharing"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Tournament rules document
+        </a>
       </p>
       <div class="house-rules">
         <div class="house-rule">
