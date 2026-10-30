@@ -1,5 +1,34 @@
 import type { Match, Pool, Team } from '../data/tournament.ts';
 
+export function buildScoreboardUrl(
+  home: Team | undefined,
+  away: Team | undefined,
+  score: Match['score'] = null,
+): string | null {
+  if (!home || !away) return null;
+
+  const colors: Record<Team['color'], string> = {
+    orange: 'a45c30',
+    purple: '7e658f',
+    green: '667b50',
+  };
+  const url = new URL('https://tools.chase.link/scoreboard/');
+  const params = url.searchParams;
+  for (const [index, team] of [home, away].entries()) {
+    const side = index === 0 ? 'A' : 'B';
+    params.set(`team${side}`, team.name);
+    // Keep opponents distinguishable when their tournament badges share a color.
+    params.set(`color${side}`, index === 1 && home.color === away.color ? '3984e8' : colors[team.color]);
+    params.set(`score${side}`, String(score?.[index] ?? 0));
+    for (const player of team.players) params.append(`player${side}`, player);
+  }
+  params.set('target', '25');
+  params.set('winBy2', 'true');
+  params.set('cap', 'none');
+  params.set('swapped', 'false');
+  return url.href;
+}
+
 export interface Standing {
   team: Team;
   played: number;

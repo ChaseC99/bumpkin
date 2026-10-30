@@ -3,12 +3,55 @@ import assert from 'node:assert/strict';
 import { getTournamentData, type Match } from '../data/tournament.ts';
 import {
   buildPlayoffSchedule,
+  buildScoreboardUrl,
   calculateStandings,
   filterMatches,
   formatTime,
 } from './tournament.ts';
 
 const { teams, matches } = await getTournamentData();
+
+test('every scheduled scoreboard preserves full names and rosters, starts fresh, and sets tournament rules', () => {
+  const links = new Set<string>();
+  for (const match of matches) {
+    const home = teams.find((team) => team.id === match.homeId)!;
+    const away = teams.find((team) => team.id === match.awayId)!;
+    const url = new URL(buildScoreboardUrl(home, away)!);
+    links.add(url.href);
+    assert.equal(url.origin, 'https://tools.chase.link');
+    assert.equal(url.pathname, '/scoreboard/');
+    const params = url.searchParams;
+    assert.equal(params.get('teamA'), home.name);
+    assert.equal(params.get('teamB'), away.name);
+    assert.deepEqual(params.getAll('playerA'), home.players);
+    assert.deepEqual(params.getAll('playerB'), away.players);
+    assert.equal(params.get('scoreA'), '0');
+    assert.equal(params.get('scoreB'), '0');
+    assert.equal(params.get('target'), '25');
+    assert.equal(params.get('winBy2'), 'true');
+    assert.equal(params.get('cap'), 'none');
+    assert.equal(params.get('swapped'), 'false');
+    assert.match(params.get('colorA')!, /^[0-9a-f]{6}$/);
+    assert.match(params.get('colorB')!, /^[0-9a-f]{6}$/);
+    assert.notEqual(params.get('colorA'), params.get('colorB'));
+  }
+  assert.equal(links.size, matches.length);
+});
+
+test('scoreboard links preserve recorded score order and wait for known playoff participants', () => {
+  const params = new URL(buildScoreboardUrl(teams[0], teams[1], [24, 26])!).searchParams;
+  assert.equal(params.get('scoreA'), '24');
+  assert.equal(params.get('scoreB'), '26');
+  assert.equal(buildScoreboardUrl(undefined, teams[0]), null);
+  assert.equal(buildScoreboardUrl(teams[0], undefined), null);
+  const pending = buildPlayoffSchedule(teams, matches);
+  for (const game of pending.games) {
+    assert.equal(buildScoreboardUrl(
+      teams.find((team) => team.id === game.home.teamId),
+      teams.find((team) => team.id === game.away.teamId),
+    ), null);
+  }
+});
 
 test('demo fixtures have seven four-player teams, valid participants, and no court or player conflicts', () => {
   assert.equal(teams.length, 7);

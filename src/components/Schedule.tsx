@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import type { Match, TournamentData } from '../data/tournament';
-import { buildPlayoffSchedule, filterMatches, formatTime } from '../lib/tournament';
+import { buildPlayoffSchedule, buildScoreboardUrl, filterMatches, formatTime } from '../lib/tournament';
 import Icon from './Icon';
 import TeamBadge from './TeamBadge';
 
-function RefereeFooter({ assignment }: { assignment: string }) {
+function RefereeFooter({ assignment, children }: { assignment: string; children?: ReactNode }) {
   return (
     <footer className="match-referee">
       <span className="match-referee-label">
@@ -12,7 +12,25 @@ function RefereeFooter({ assignment }: { assignment: string }) {
         Referees
       </span>
       <p className="match-referee-names">{assignment}</p>
+      {children}
     </footer>
+  );
+}
+
+function ScoreboardLink({ href, matchup }: { href: string | null; matchup: string }) {
+  if (!href) {
+    return null;
+  }
+  return (
+    <a
+      className="button match-scoreboard"
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Open scoreboard: ${matchup} (opens in a new tab)`}
+    >
+      Open scoreboard <Icon name="arrow" size={16} style={{ transform: 'rotate(-45deg)' }} />
+    </a>
   );
 }
 
@@ -87,7 +105,15 @@ export default function Schedule({ teams, matches }: TournamentData) {
           </div>
         );
       })}
-      <RefereeFooter assignment={game.referee.replaceAll(', ', ' · ')} />
+      <RefereeFooter assignment={game.referee.replaceAll(', ', ' · ')}>
+        <ScoreboardLink
+          href={buildScoreboardUrl(
+            teams.find((team) => team.id === game.home.teamId),
+            teams.find((team) => team.id === game.away.teamId),
+          )}
+          matchup={`${game.home.label} versus ${game.away.label}`}
+        />
+      </RefereeFooter>
     </article>
   );
 
@@ -136,11 +162,16 @@ export default function Schedule({ teams, matches }: TournamentData) {
             </span>
           </div>
         ))}
-        {match.refereeId && (
-          <RefereeFooter
-            assignment={teams.find((team) => team.id === match.refereeId)?.players.join(' · ') ?? match.refereeId}
-          />
-        )}
+        <RefereeFooter
+          assignment={teams.find((team) => team.id === match.refereeId)?.players.join(' · ') ?? match.refereeId ?? 'TBD'}
+        >
+          {match.status !== 'final' && (
+            <ScoreboardLink
+              href={buildScoreboardUrl(home, away, match.score)}
+              matchup={`${home.name} versus ${away.name}`}
+            />
+          )}
+        </RefereeFooter>
       </article>
     );
   };
@@ -239,6 +270,22 @@ export default function Schedule({ teams, matches }: TournamentData) {
           </p>
         </div>
       </aside>
+      <details className="scoreboard-guide">
+        <summary>Refereeing a game?</summary>
+        <p>
+          Open your game’s scoreboard in a new tab with teams and players filled in.
+          Play to 25, win by 2, with no cap. Tap a team’s score to add a point.
+        </p>
+        <p>
+          When finished, open Settings → Configure with URL → Copy link and send
+          it to the organizers with the round and court. The link includes the
+          final scores; organizers will update the standings.
+        </p>
+        <p>
+          Keep that scoreboard tab open during the game. Reopening an upcoming
+          game from this schedule starts at 0–0.
+        </p>
+      </details>
       {stage === 'playoff' ? (
         <>
           {!playoffSchedule.ready && (

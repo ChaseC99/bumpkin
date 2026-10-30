@@ -46,6 +46,12 @@ Standings derive only from completed pool matches, ordered by wins and then poin
 
 Schedule filters are reflected in the URL so filtered links can be shared and reloaded. Search matches team names and player names. Every roster in this build is fictional.
 
+## Referee scoreboards
+
+Each confirmed, upcoming matchup has an **Open scoreboard** button inside its referee section, linking to `tools.chase.link/scoreboard/` with both full team names, all players, distinct colors, and scores encoded in the URL. Games use a target of 25, win by 2, and no cap. Upcoming games start at 0–0; recorded scores are included when present. The button is hidden once the match is marked `final`; the scores and referee names remain visible. Playoff scoreboards become available when both participants resolve to teams.
+
+Refs should keep their scoreboard tab open during play. After the game, use **Settings → Configure with URL → Copy link** and send that link to organizers with the round and court. The copied URL contains the current scores. Opening the original schedule link again loads the scores from the schedule, not the ref’s in-progress game. Results are shared manually; scoreboard links do not submit scores or update standings automatically.
+
 ## Future Supabase integration
 
 Replace the sample data adapter with Supabase reads using the same `Team`, `Match`, and `TournamentData` contracts (and change the demo mode contract when real data is added). For updates during the event, load/refresh data on the client or add an Astro server adapter rather than relying on build-time snapshots. An organizer score-entry screen should use authenticated, authorized writes with database row-level security. Keep service-role keys on the server. No Supabase dependency or pretend login is included in this version.

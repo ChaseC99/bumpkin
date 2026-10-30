@@ -849,6 +849,30 @@ abbr {
   border-radius: 0 0 11px 11px;
   background: var(--paper);
 }
+.match-referee .match-scoreboard {
+  display: flex;
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: 12px;
+  background: #fff4e9;
+  font-size: 13px;
+}
+.scoreboard-guide {
+  margin-bottom: 24px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.scoreboard-guide summary {
+  font-weight: 600;
+}
+.scoreboard-guide p {
+  margin-top: 10px;
+  color: var(--muted);
+}
 .match-referee-label {
   display: inline-flex;
   align-items: center;
