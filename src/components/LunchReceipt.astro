@@ -1,0 +1,245 @@
+---
+import Icon from './Icon';
+import {
+  lunchReceipt,
+  lunchOrders,
+  lunchItems,
+  formatMoney,
+} from '../data/lunch';
+---
+
+<section
+  class="info-section lunch-section"
+  aria-labelledby="lunch-heading"
+  id="lunch"
+>
+  <div class="section-heading">
+    <Icon name="bag" size={21} />
+    <h2 id="lunch-heading">Lunch receipts & split</h2>
+  </div>
+  <div class="info-card lunch-payment">
+    <div>
+      <h3>Lopez lunch order</h3>
+      <p>17 burritos · {formatMoney(lunchReceipt.total)} total</p>
+    </div>
+    <a
+      class="button lunch-venmo"
+      href="https://venmo.com/u/fluke-t"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Venmo @fluke-t <Icon name="arrow" size={18} />
+      <span class="sr-only">(opens in a new tab)</span>
+    </a>
+    <p class="lunch-payment-note">
+      Send your total below and include your name + “lunch” in the note.
+    </p>
+  </div>
+  <p class="lunch-method">
+    Tax, tip, and the service fee are split in proportion to each burrito’s
+    price. Totals include everything and are rounded to the cent to add up to
+    exactly $270.20.
+  </p>
+  <ul class="info-card lunch-orders" aria-label="Lunch amounts owed by person">
+    {lunchOrders.map((order) => (
+      <li>
+        <div class="lunch-order-heading">
+          <h3>{order.name}</h3>
+          <strong aria-label={`Total owed: ${formatMoney(order.total)}`}>
+            {formatMoney(order.total)}
+          </strong>
+        </div>
+        <p>{order.item}</p>
+        <small>
+          {formatMoney(order.price)} food + {formatMoney(order.extras)} tax, tip
+          & fee
+        </small>
+      </li>
+    ))}
+  </ul>
+  <p class="lunch-drink">
+    <strong>Jiwan · Agua fresca:</strong> Not included in this receipt. Price
+    not provided, so no amount is assigned here.
+  </p>
+  <details class="info-card lunch-receipt">
+    <summary>
+      View itemized receipt <Icon name="chevron" size={18} />
+    </summary>
+    <div class="lunch-receipt-body">
+      <ul class="lunch-receipt-items">
+        {lunchItems.map((item) => (
+          <li>
+            <span>
+              {item.quantity} × {item.item}
+              <small>{formatMoney(item.price)} each</small>
+            </span>
+            <strong>{formatMoney(item.price * item.quantity)}</strong>
+          </li>
+        ))}
+      </ul>
+      <dl class="lunch-totals">
+        <div>
+          <dt>Subtotal</dt>
+          <dd>{formatMoney(lunchReceipt.subtotal)}</dd>
+        </div>
+        <div>
+          <dt>Tax</dt>
+          <dd>{formatMoney(lunchReceipt.tax)}</dd>
+        </div>
+        <div>
+          <dt>Tip</dt>
+          <dd>{formatMoney(lunchReceipt.tip)}</dd>
+        </div>
+        <div>
+          <dt>Service fee</dt>
+          <dd>{formatMoney(lunchReceipt.serviceFee)}</dd>
+        </div>
+        <div class="lunch-grand-total">
+          <dt>Total</dt>
+          <dd>{formatMoney(lunchReceipt.total)}</dd>
+        </div>
+      </dl>
+      <p>
+        Transcribed from the order confirmation. All listed meat choices and
+        modifications cost $0 extra.
+      </p>
+    </div>
+  </details>
+</section>
+
+<style>
+  .lunch-section {
+    scroll-margin-top: 24px;
+  }
+  .lunch-payment {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px;
+    background: #f0f3eb;
+    border-color: #d6dfcb;
+  }
+  .lunch-venmo {
+    min-height: 48px;
+    background: #354b32;
+    color: white;
+    border-color: #354b32;
+    font-weight: 650;
+  }
+  .lunch-venmo:hover {
+    background: #253822;
+  }
+  .lunch-payment .lunch-payment-note {
+    flex-basis: 100%;
+    margin: 0;
+  }
+  .lunch-method {
+    margin: 16px 0;
+  }
+  .lunch-orders {
+    list-style: none;
+    margin: 0;
+    padding: 0 18px;
+  }
+  .lunch-orders li {
+    padding: 16px 0;
+  }
+  .lunch-orders li + li {
+    border-top: 1px solid var(--line);
+  }
+  .lunch-order-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    justify-content: space-between;
+  }
+  .lunch-order-heading h3 {
+    margin: 0;
+  }
+  .lunch-order-heading strong {
+    font-size: 20px;
+    color: #354b32;
+    font-variant-numeric: tabular-nums;
+  }
+  .lunch-orders p {
+    margin: 5px 0 3px;
+  }
+  .lunch-orders small,
+  .lunch-receipt-items small {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #5c625a;
+  }
+  .lunch-drink {
+    margin: 16px 0;
+    padding-left: 12px;
+    border-left: 3px solid #bd5725;
+  }
+  .lunch-receipt summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 18px;
+    font-weight: 650;
+    min-height: 56px;
+  }
+  .lunch-receipt-body {
+    padding: 0 18px 18px;
+  }
+  .lunch-receipt-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .lunch-receipt-items li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .lunch-receipt-items small {
+    display: block;
+  }
+  .lunch-receipt-items strong {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .lunch-totals {
+    margin: 12px 0;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+  }
+  .lunch-totals div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 5px 0;
+    font-size: 14px;
+  }
+  .lunch-totals dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .lunch-totals .lunch-grand-total {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .lunch-receipt-body > p {
+    font-size: 12px;
+  }
+  @media (max-width: 480px) {
+    .lunch-venmo {
+      width: 100%;
+    }
+  }
+</style>
