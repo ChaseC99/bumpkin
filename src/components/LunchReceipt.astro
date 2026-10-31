@@ -2,10 +2,19 @@
 import Icon from './Icon';
 import {
   lunchReceipt,
+  lunchDrink,
   lunchOrders,
   lunchItems,
   formatMoney,
 } from '../data/lunch';
+
+const paymentOrders = [
+  ...lunchOrders.map((order) => ({
+    ...order,
+    note: `${formatMoney(order.price)} food + ${formatMoney(order.extras)} tax, tip & fee`,
+  })),
+  { ...lunchDrink, note: 'Separate drink · Amount provided by the organizer' },
+].sort((a, b) => a.name.localeCompare(b.name));
 ---
 
 <section
@@ -20,7 +29,10 @@ import {
   <div class="info-card lunch-payment">
     <div>
       <h3>Lopez lunch order</h3>
-      <p>17 burritos · {formatMoney(lunchReceipt.total)} total</p>
+      <p>
+        17 burritos + 1 agua fresca ·{' '}
+        {formatMoney(lunchReceipt.total + lunchDrink.total)} total
+      </p>
     </div>
     <a
       class="button lunch-venmo"
@@ -37,11 +49,12 @@ import {
   </div>
   <p class="lunch-method">
     Tax, tip, and the service fee are split in proportion to each burrito’s
-    price. Totals include everything and are rounded to the cent to add up to
-    exactly $270.20.
+    price. Burrito totals include everything and are rounded to the cent to add
+    up to exactly $270.20. Jiwan’s separate $4.50 agua fresca brings the total
+    owed to $274.70.
   </p>
   <ul class="info-card lunch-orders" aria-label="Lunch amounts owed by person">
-    {lunchOrders.map((order) => (
+    {paymentOrders.map((order) => (
       <li>
         <div class="lunch-order-heading">
           <h3>{order.name}</h3>
@@ -50,17 +63,10 @@ import {
           </strong>
         </div>
         <p>{order.item}</p>
-        <small>
-          {formatMoney(order.price)} food + {formatMoney(order.extras)} tax, tip
-          & fee
-        </small>
+        <small>{order.note}</small>
       </li>
     ))}
   </ul>
-  <p class="lunch-drink">
-    <strong>Jiwan · Agua fresca:</strong> Not included in this receipt. Price
-    not provided, so no amount is assigned here.
-  </p>
   <details class="info-card lunch-receipt">
     <summary>
       View itemized receipt <Icon name="chevron" size={18} />
@@ -172,10 +178,8 @@ import {
     line-height: 1.5;
     color: #5c625a;
   }
-  .lunch-drink {
-    margin: 16px 0;
-    padding-left: 12px;
-    border-left: 3px solid #bd5725;
+  .lunch-receipt {
+    margin-top: 16px;
   }
   .lunch-receipt summary {
     display: flex;

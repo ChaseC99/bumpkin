@@ -7,6 +7,9 @@ export const lunchReceipt = {
   total: 27020,
 };
 
+// Separate drink amount supplied by the organizer; outside the burrito receipt.
+export const lunchDrink = { name: 'Jiwan', item: 'Agua fresca', total: 450 };
+
 const orders = [
   { name: 'Andre', item: 'Regular burrito · Carne asada', price: 1166 },
   {
