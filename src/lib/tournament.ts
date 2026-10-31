@@ -1,9 +1,9 @@
-import type { Match, Pool, Team } from '../data/tournament.ts';
+import type { GameScore, Match, Pool, Team } from '../data/tournament.ts';
 
 export function buildScoreboardUrl(
   home: Team | undefined,
   away: Team | undefined,
-  score: Match['score'] = null,
+  score: GameScore = null,
 ): string | null {
   if (!home || !away) return null;
 
@@ -22,11 +22,17 @@ export function buildScoreboardUrl(
     params.set(`score${side}`, String(score?.[index] ?? 0));
     for (const player of team.players) params.append(`player${side}`, player);
   }
-  params.set('target', '25');
+  params.set('target', '21');
   params.set('winBy2', 'true');
   params.set('cap', 'none');
   params.set('swapped', 'false');
   return url.href;
+}
+
+function isCompletedScore(score: GameScore): score is [number, number] {
+  return score !== null &&
+    score.every((points) => Number.isInteger(points) && points >= 0) &&
+    score[0] !== score[1];
 }
 
 export interface Standing {
@@ -60,30 +66,28 @@ export function calculateStandings(
       rank: 0,
     }));
   for (const match of matches) {
-    // Playoff results never change the pool standings. Incomplete or invalid scores don't count.
-    if (match.stage !== 'pool' || match.status !== 'final' || !match.score)
-      continue;
-    const [home, away] = match.score;
-    if (
-      ![home, away].every((score) => Number.isInteger(score) && score >= 0) ||
-      home === away
-    )
-      continue;
-    for (const row of rows) {
-      if (row.team.id !== match.homeId && row.team.id !== match.awayId)
-        continue;
-      const isHome = row.team.id === match.homeId;
-      const scored = isHome ? home : away;
-      const conceded = isHome ? away : home;
-      row.played++;
-      row.wins += Number(scored > conceded);
-      row.losses += Number(scored < conceded);
-      row.winPercentage = row.wins / row.played;
-      row.pointsFor += scored;
-      row.pointsAgainst += conceded;
-      row.difference = row.pointsFor - row.pointsAgainst;
+    // Each completed pool game contributes separately to the standings.
+    if (match.stage !== 'pool' || match.status !== 'final') continue;
+    for (const score of match.scores) {
+      if (!isCompletedScore(score)) continue;
+      const [home, away] = score;
+      for (const row of rows) {
+        if (row.team.id !== match.homeId && row.team.id !== match.awayId)
+          continue;
+        const isHome = row.team.id === match.homeId;
+        const scored = isHome ? home : away;
+        const conceded = isHome ? away : home;
+        row.played++;
+        row.wins += Number(scored > conceded);
+        row.losses += Number(scored < conceded);
+        row.winPercentage = row.wins / row.played;
+        row.pointsFor += scored;
+        row.pointsAgainst += conceded;
+        row.difference = row.pointsFor - row.pointsAgainst;
+      }
     }
   }
+
   rows.sort(
     (a, b) =>
       b.winPercentage - a.winPercentage ||
@@ -133,9 +137,7 @@ export function buildPlayoffSchedule(
     poolMatches.every(
       (match) =>
         match.status === 'final' &&
-        match.score !== null &&
-        match.score.every((score) => Number.isInteger(score) && score >= 0) &&
-        match.score[0] !== match.score[1],
+        match.scores.every(isCompletedScore),
     );
   const standings = calculateStandings(teams, matches);
   const participant = (row: Standing | undefined, seed: number): PlayoffParticipant =>

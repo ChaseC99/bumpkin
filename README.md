@@ -42,15 +42,15 @@ This setup does not cache pages for offline use. A service worker is not require
 
 `src/data/tournament.ts` contains event constants, typed teams, and sample matches. `getTournamentData()` is the data boundary for the site. The illustrative configuration has three pools of three teams and three courts; these are not confirmed event logistics. The playoff bracket, match scoring rules, and official tiebreakers remain undecided.
 
-Standings derive only from completed pool matches, ordered by wins and then point difference. Equal records share a rank. Upcoming games and playoff results do not change the pool table. Demo results are labeled on both interactive pages.
+Each pool match stores two game scores in `scores`, in Game 1 / Game 2 order. Standings count each valid game of a completed pool match separately, ordered by win percentage and then point difference. Playoff seeding waits for both games of every pool match to be complete. Equal records share a rank. Upcoming games and playoff results do not change the pool table. Demo results are labeled on both interactive pages.
 
 Schedule filters are reflected in the URL so filtered links can be shared and reloaded. Search matches team names and player names. Every roster in this build is fictional.
 
 ## Referee scoreboards
 
-Each confirmed, upcoming matchup has an **Open scoreboard** button inside its referee section, linking to `tools.chase.link/scoreboard/` with both full team names, all players, distinct colors, and scores encoded in the URL. Games use a target of 25, win by 2, and no cap. Upcoming games start at 0–0; recorded scores are included when present. The button is hidden once the match is marked `final`; the scores and referee names remain visible. Playoff scoreboards become available when both participants resolve to teams.
+Each upcoming pool matchup has **Game 1 scoreboard** and **Game 2 scoreboard** buttons inside its referee section, linking to `tools.chase.link/scoreboard/` with both full team names, all players, distinct colors, and scores encoded in the URL. Games use a target of 21, win by 2, and no cap. Upcoming games start at 0–0; recorded scores are included when present. Both buttons are hidden once the match is marked `final`; the scores and referee names remain visible. Playoff scoreboards become available when both participants resolve to teams.
 
-Refs should keep their scoreboard tab open during play. After the game, use **Settings → Configure with URL → Copy link** and send that link to organizers with the round and court. The copied URL contains the current scores. Opening the original schedule link again loads the scores from the schedule, not the ref’s in-progress game. Results are shared manually; scoreboard links do not submit scores or update standings automatically.
+Refs should keep their scoreboard tab open during play. After the game, use **Settings → Configure with URL → Copy link** and send that link to organizers with the round, court, and game number. The copied URL contains the current scores. Opening the original schedule link again loads the scores from the schedule, not the ref’s in-progress game. Results are shared manually; scoreboard links do not submit scores or update standings automatically.
 
 ## Future Supabase integration
 

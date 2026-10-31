@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getTournamentData, type Match } from '../data/tournament.ts';
+import { getTournamentData, type GameScore, type Match } from '../data/tournament.ts';
 import {
   buildPlayoffSchedule,
   buildScoreboardUrl,
@@ -27,7 +27,7 @@ test('every scheduled scoreboard preserves full names and rosters, starts fresh,
     assert.deepEqual(params.getAll('playerB'), away.players);
     assert.equal(params.get('scoreA'), '0');
     assert.equal(params.get('scoreB'), '0');
-    assert.equal(params.get('target'), '25');
+    assert.equal(params.get('target'), '21');
     assert.equal(params.get('winBy2'), 'true');
     assert.equal(params.get('cap'), 'none');
     assert.equal(params.get('swapped'), 'false');
@@ -79,11 +79,11 @@ test('standings count completed pool games and conserve points and wins', () => 
   assert.ok(rows.length >= 3);
   assert.equal(
     rows.reduce((n, row) => n + row.wins, 0),
-    matches.filter((match) => match.status === 'final').length,
+    matches.filter((match) => match.status === 'final').flatMap((match) => match.scores).filter(Boolean).length,
   );
   assert.equal(
     rows.reduce((n, row) => n + row.losses, 0),
-    matches.filter((match) => match.status === 'final').length,
+    matches.filter((match) => match.status === 'final').flatMap((match) => match.scores).filter(Boolean).length,
   );
   assert.equal(
     rows.reduce((n, row) => n + row.difference, 0),
@@ -94,12 +94,12 @@ test('standings count completed pool games and conserve points and wins', () => 
 
 test('unplayed, tied, invalid, and playoff scores do not alter pool standings', () => {
   const cases: Match[] = [
-    { ...matches[0], status: 'scheduled', score: [25, 12] },
-    { ...matches[0], score: [25, 25] },
-    { ...matches[0], score: [-1, 25] },
-    { ...matches[0], score: [Number.NaN, 25] },
-    { ...matches[0], stage: 'playoff' },
-    { ...matches[0], score: null },
+    { ...matches[0], status: 'scheduled', scores: [[25, 12], null] },
+    { ...matches[0], status: 'final', scores: [[21, 21], null] },
+    { ...matches[0], status: 'final', scores: [[-1, 21], null] },
+    { ...matches[0], status: 'final', scores: [[Number.NaN, 21], null] },
+    { ...matches[0], stage: 'playoff', status: 'final', scores: [[21, 10], [21, 10]] },
+    { ...matches[0], scores: [null, null] },
   ];
   assert.ok(
     calculateStandings(teams, cases).every(
@@ -115,20 +115,40 @@ test('equivalent records share a rank with competition numbering', () => {
       homeId: teams[0].id,
       awayId: teams[1].id,
       status: 'final',
-      score: [25, 18],
+      scores: [[25, 18], null],
     },
     {
       ...matches[1],
       homeId: teams[2].id,
       awayId: teams[1].id,
       status: 'final',
-      score: [25, 18],
+      scores: [[25, 18], null],
     },
   ]);
   assert.deepEqual(
     rows.map((row) => row.rank),
     [1, 1, 3],
   );
+});
+
+test('both games count separately, including a split round, and seeding waits for game two', () => {
+  const match: Match = {
+    ...matches[0],
+    status: 'final',
+    scores: [[21, 15], [19, 21]],
+  };
+  const rows = calculateStandings(teams, [match]);
+  const home = rows.find((row) => row.team.id === match.homeId)!;
+  const away = rows.find((row) => row.team.id === match.awayId)!;
+  assert.deepEqual(
+    [home.played, home.wins, home.losses, home.winPercentage, home.pointsFor, home.pointsAgainst],
+    [2, 1, 1, 0.5, 40, 36],
+  );
+  assert.deepEqual([away.played, away.wins, away.losses, away.difference], [2, 1, 1, -4]);
+  assert.equal(buildPlayoffSchedule(teams, [match]).ready, true);
+  for (const second of [null, [21, 21], [-1, 21], [Number.NaN, 21]] as GameScore[]) {
+    assert.equal(buildPlayoffSchedule(teams, [{ ...match, scores: [[21, 15], second] }]).ready, false);
+  }
 });
 
 test('search supports partial names, case, whitespace, and intersecting filters', () => {
@@ -190,7 +210,7 @@ test('playoffs seed 1v4, 2v3, and 6v7, with seed 5 refereeing', () => {
   const completed = matches.map((match) => ({
     ...match,
     status: 'final' as const,
-    score: [25, 10] as [number, number],
+    scores: [[21, 10], [21, 10]] as Match['scores'],
   }));
   const schedule = buildPlayoffSchedule(teams, completed);
   const roundOne = schedule.games.filter((game) => game.round === 1);
@@ -219,23 +239,23 @@ test('win percentage takes priority over total wins for playoff seeding', () => 
       homeId: 't1',
       awayId: teams[index + 2].id,
       status: 'final' as const,
-      score: (index === 3 ? [10, 25] : [25, 10]) as [number, number],
+      scores: [index === 3 ? [10, 21] : [21, 10], [21, 10]] as Match['scores'],
     })),
     ...matches.slice(4, 6).map((match, index) => ({
       ...match,
       homeId: 't2',
       awayId: teams[index + 4].id,
       status: 'final' as const,
-      score: [25, 10] as [number, number],
+      scores: [[21, 10], [21, 10]] as Match['scores'],
     })),
   ];
   const standings = calculateStandings(teams, completed);
   const t1 = standings.find((row) => row.team.id === 't1')!;
   const t2 = standings.find((row) => row.team.id === 't2')!;
 
-  assert.equal(t1.wins, 3);
-  assert.equal(t1.winPercentage, 0.75);
-  assert.equal(t2.wins, 2);
+  assert.equal(t1.wins, 7);
+  assert.equal(t1.winPercentage, 0.875);
+  assert.equal(t2.wins, 4);
   assert.equal(t2.winPercentage, 1);
   assert.ok(standings.indexOf(t2) < standings.indexOf(t1));
 });

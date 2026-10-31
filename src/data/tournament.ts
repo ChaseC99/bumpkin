@@ -19,6 +19,8 @@ export interface Team {
   players: string[];
 }
 
+export type GameScore = [number, number] | null;
+
 export interface Match {
   id: string;
   stage: 'pool' | 'playoff';
@@ -30,7 +32,7 @@ export interface Match {
   awayId: string;
   refereeId?: string;
   status: 'scheduled' | 'final';
-  score: [number, number] | null;
+  scores: [GameScore, GameScore];
 }
 
 export interface TournamentData {
@@ -128,7 +130,7 @@ const matches: Match[] = [
     awayId: 't4',
     refereeId: 't7',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
   {
     id: 'r1-c2',
@@ -141,7 +143,7 @@ const matches: Match[] = [
     awayId: 't5',
     refereeId: 't7',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
   {
     id: 'r1-c3',
@@ -154,7 +156,7 @@ const matches: Match[] = [
     awayId: 't6',
     refereeId: 't7',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
   {
     id: 'r2-c1',
@@ -167,7 +169,7 @@ const matches: Match[] = [
     awayId: 't5',
     refereeId: 't6',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
   {
     id: 'r2-c2',
@@ -180,7 +182,7 @@ const matches: Match[] = [
     awayId: 't4',
     refereeId: 't6',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
   {
     id: 'r2-c3',
@@ -193,7 +195,7 @@ const matches: Match[] = [
     awayId: 't7',
     refereeId: 't6',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
   {
     id: 'r3-c1',
@@ -206,7 +208,7 @@ const matches: Match[] = [
     awayId: 't6',
     refereeId: 't2',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
   {
     id: 'r3-c2',
@@ -219,7 +221,7 @@ const matches: Match[] = [
     awayId: 't4',
     refereeId: 't2',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
   {
     id: 'r3-c3',
@@ -232,7 +234,7 @@ const matches: Match[] = [
     awayId: 't7',
     refereeId: 't2',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
   {
     id: 'r4-c1',
@@ -245,7 +247,7 @@ const matches: Match[] = [
     awayId: 't7',
     refereeId: 't4',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
   {
     id: 'r4-c2',
@@ -258,7 +260,7 @@ const matches: Match[] = [
     awayId: 't6',
     refereeId: 't4',
     status: 'scheduled',
-    score: null,
+    scores: [null, null],
   },
 ];
 

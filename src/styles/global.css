@@ -871,13 +871,34 @@ abbr {
   color: #969a91;
   font-variant-numeric: tabular-nums;
 }
-.match-team.winner .match-score {
+.match-score.winner {
   color: var(--ink);
   font-weight: 700;
 }
 .score-dash {
   font-size: 18px;
   color: #aaa;
+}
+.match-games-heading,
+.match-game-scores {
+  display: grid;
+  grid-template-columns: repeat(2, 44px);
+  gap: 8px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.match-games-heading {
+  justify-content: end;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+.match-scoreboards {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 .match-referee {
   display: grid;
@@ -897,6 +918,11 @@ abbr {
   margin-top: 12px;
   background: #fff4e9;
   font-size: 13px;
+}
+.match-scoreboards .match-scoreboard {
+  grid-column: auto;
+  padding-inline: 8px;
+  font-size: 12px;
 }
 .scoreboard-guide {
   margin-bottom: 24px;

@@ -17,7 +17,7 @@ function RefereeFooter({ assignment, children }: { assignment: string; children?
   );
 }
 
-function ScoreboardLink({ href, matchup }: { href: string | null; matchup: string }) {
+function ScoreboardLink({ href, matchup, game }: { href: string | null; matchup: string; game?: number }) {
   if (!href) {
     return null;
   }
@@ -27,9 +27,9 @@ function ScoreboardLink({ href, matchup }: { href: string | null; matchup: strin
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Open scoreboard: ${matchup} (opens in a new tab)`}
+      aria-label={`Open scoreboard: ${matchup}${game ? `, game ${game}` : ''} (opens in a new tab)`}
     >
-      Open scoreboard <Icon name="arrow" size={16} style={{ transform: 'rotate(-45deg)' }} />
+      {game ? `Game ${game} scoreboard` : 'Open scoreboard'} <Icon name="arrow" size={16} style={{ transform: 'rotate(-45deg)' }} />
     </a>
   );
 }
@@ -141,9 +141,13 @@ export default function Schedule({ teams, matches }: TournamentData) {
             )}
           </span>
         </div>
+        <div className="match-games-heading" aria-hidden="true">
+          <span>Game 1</span>
+          <span>Game 2</span>
+        </div>
         {[home, away].map((team, index) => (
           <div
-            className={`match-team ${match.score && match.score[index] > match.score[1 - index] ? 'winner' : ''}`}
+            className="match-team"
             key={team.id}
           >
             <TeamBadge team={team} />
@@ -153,12 +157,16 @@ export default function Schedule({ teams, matches }: TournamentData) {
                 {team.players.map((name) => name.split(' ')[0]).join(' · ')}
               </p>
             </div>
-            <span className="match-score">
-              {match.score ? (
-                match.score[index]
-              ) : (
-                <span className="score-dash">—</span>
-              )}
+            <span className="match-game-scores">
+              {match.scores.map((score, gameIndex) => (
+                <span
+                  key={gameIndex}
+                  className={`match-score ${score && score[index] > score[1 - index] ? 'winner' : ''}`}
+                  aria-label={`Game ${gameIndex + 1}: ${score ? score[index] : 'not played'}`}
+                >
+                  {score ? score[index] : <span className="score-dash">—</span>}
+                </span>
+              ))}
             </span>
           </div>
         ))}
@@ -166,10 +174,16 @@ export default function Schedule({ teams, matches }: TournamentData) {
           assignment={teams.find((team) => team.id === match.refereeId)?.players.join(' · ') ?? match.refereeId ?? 'TBD'}
         >
           {match.status !== 'final' && (
-            <ScoreboardLink
-              href={buildScoreboardUrl(home, away, match.score)}
-              matchup={`${home.name} versus ${away.name}`}
-            />
+            <div className="match-scoreboards">
+              {match.scores.map((score, index) => (
+                <ScoreboardLink
+                  key={index}
+                  href={buildScoreboardUrl(home, away, score)}
+                  matchup={`${home.name} versus ${away.name}`}
+                  game={index + 1}
+                />
+              ))}
+            </div>
           )}
         </RefereeFooter>
       </article>
@@ -274,11 +288,12 @@ export default function Schedule({ teams, matches }: TournamentData) {
         <summary>Refereeing a game?</summary>
         <p>
           Open your game’s scoreboard in a new tab with teams and players filled in.
-          Play to 25, win by 2, with no cap. Tap a team’s score to add a point.
+          Each pool round has two games. Open the scoreboard for Game 1 or Game 2.
+          Play to 21, win by 2, with no cap. Tap a team’s score to add a point.
         </p>
         <p>
           When finished, open Settings → Configure with URL → Copy link and send
-          it to the organizers with the round and court. The link includes the
+          it to the organizers with the round, court, and game number. The link includes the
           final scores; organizers will update the standings.
         </p>
         <p>
