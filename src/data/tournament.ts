@@ -290,4 +290,10 @@ const playoffResults: PlayoffResult[] = [
     awayId: 't2',
     scores: [[22, 20], [11, 21], [10, 15]],
   },
+  {
+    id: 'playoff-r1-c3',
+    homeId: 't6',
+    awayId: 't7',
+    scores: [[18, 21], [9, 21]],
+  },
 ];
