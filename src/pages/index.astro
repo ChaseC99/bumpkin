@@ -13,8 +13,6 @@ const details = [
     icon: 'clock',
     label: 'Time',
     value: event.time,
-    note: 'Players meeting at 9:30 · games start at 10:00',
-    warning: 'Warning: if you show up after 9:30 am, a mystery punishment awaits.',
   },
   {
     icon: 'pin',
@@ -84,7 +82,6 @@ const teams = [
             <dd>
               <span>{item.value}</span>
               {'note' in item && <small>{item.note}</small>}
-              {'warning' in item && <small class="warning-note">{item.warning}</small>}
             </dd>
           </div>
         ))}

@@ -17,7 +17,7 @@ function RefereeFooter({ assignment, children }: { assignment: string; children?
   );
 }
 
-function ScoreboardLink({ href, matchup, game }: { href: string | null; matchup: string; game?: number }) {
+function ScoreboardLink({ href, matchup }: { href: string | null; matchup: string }) {
   if (!href) {
     return null;
   }
@@ -27,9 +27,9 @@ function ScoreboardLink({ href, matchup, game }: { href: string | null; matchup:
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Open scoreboard: ${matchup}${game ? `, game ${game}` : ''} (opens in a new tab)`}
+      aria-label={`Open scoreboard: ${matchup} (opens in a new tab)`}
     >
-      {game ? `Game ${game} scoreboard` : 'Open scoreboard'} <Icon name="arrow" size={16} style={{ transform: 'rotate(-45deg)' }} />
+      Open scoreboard <Icon name="arrow" size={16} style={{ transform: 'rotate(-45deg)' }} />
     </a>
   );
 }
@@ -174,16 +174,10 @@ export default function Schedule({ teams, matches }: TournamentData) {
           assignment={teams.find((team) => team.id === match.refereeId)?.players.join(' · ') ?? match.refereeId ?? 'TBD'}
         >
           {match.status !== 'final' && (
-            <div className="match-scoreboards">
-              {match.scores.map((score, index) => (
-                <ScoreboardLink
-                  key={index}
-                  href={buildScoreboardUrl(home, away, score)}
-                  matchup={`${home.name} versus ${away.name}`}
-                  game={index + 1}
-                />
-              ))}
-            </div>
+            <ScoreboardLink
+              href={buildScoreboardUrl(home, away)}
+              matchup={`${home.name} versus ${away.name}`}
+            />
           )}
         </RefereeFooter>
       </article>
@@ -275,20 +269,11 @@ export default function Schedule({ teams, matches }: TournamentData) {
           <span>POOL PLAY</span>
         </div>
       )}
-      <aside className="players-meeting" aria-labelledby="players-meeting-heading">
-        <Icon name="clock" size={22} />
-        <div>
-          <h2 id="players-meeting-heading">9:30 am · Players' meeting & check-in</h2>
-          <p>
-            <strong>All players must check in.</strong> Games begin at 10:00 am.
-          </p>
-        </div>
-      </aside>
       <details className="scoreboard-guide">
         <summary>Refereeing a game?</summary>
         <p>
           Open your game’s scoreboard in a new tab with teams and players filled in.
-          Each pool round has two games. Open the scoreboard for Game 1 or Game 2.
+          Use the same button for both games in each pool round.
           Play to 21, win by 2, with no cap. Tap a team’s score to add a point.
         </p>
         <p>
@@ -298,7 +283,8 @@ export default function Schedule({ teams, matches }: TournamentData) {
         </p>
         <p>
           Keep that scoreboard tab open during the game. Reopening an upcoming
-          game from this schedule starts at 0–0.
+          game from this schedule starts at 0–0. Send Game 1’s result before
+          reopening the scoreboard for Game 2.
         </p>
       </details>
       {stage === 'playoff' ? (

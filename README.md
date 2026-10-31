@@ -48,9 +48,9 @@ Schedule filters are reflected in the URL so filtered links can be shared and re
 
 ## Referee scoreboards
 
-Each upcoming pool matchup has **Game 1 scoreboard** and **Game 2 scoreboard** buttons inside its referee section, linking to `tools.chase.link/scoreboard/` with both full team names, all players, distinct colors, and scores encoded in the URL. Games use a target of 21, win by 2, and no cap. Upcoming games start at 0–0; recorded scores are included when present. Both buttons are hidden once the match is marked `final`; the scores and referee names remain visible. Playoff scoreboards become available when both participants resolve to teams.
+Each upcoming pool matchup has one **Open scoreboard** button inside its referee section for use with both games, linking to `tools.chase.link/scoreboard/` with both full team names, all players, distinct colors, and scores encoded in the URL. Games use a target of 21, win by 2, and no cap. The scoreboard starts at 0–0 each time it is opened. The button is hidden once the match is marked `final`; the scores and referee names remain visible. Playoff scoreboards become available when both participants resolve to teams.
 
-Refs should keep their scoreboard tab open during play. After the game, use **Settings → Configure with URL → Copy link** and send that link to organizers with the round, court, and game number. The copied URL contains the current scores. Opening the original schedule link again loads the scores from the schedule, not the ref’s in-progress game. Results are shared manually; scoreboard links do not submit scores or update standings automatically.
+Refs should keep their scoreboard tab open during play. After the game, use **Settings → Configure with URL → Copy link** and send that link to organizers with the round, court, and game number. The copied URL contains the current scores. After sharing Game 1’s result, reopen the scoreboard from the schedule to start Game 2 at 0–0. Opening the schedule link does not restore the ref’s in-progress game. Results are shared manually; scoreboard links do not submit scores or update standings automatically.
 
 ## Future Supabase integration
 

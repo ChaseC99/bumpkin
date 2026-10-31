@@ -265,25 +265,6 @@ abbr {
   font-size: 12px;
   font-weight: 400;
 }
-.event-row small.warning-note {
-  display: block;
-  margin-top: 8px;
-  color: #b42318;
-  font-size: 15px;
-  font-weight: 650;
-  line-height: 1.5;
-}
-.schedule-warning {
-  margin: 0 0 18px;
-  padding: 14px 16px;
-  border: 1px solid #f0d5ba;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #fff9f3 0%, #fff3e9 100%);
-  color: #9a4d21;
-  font-size: 15px;
-  font-weight: 800;
-  line-height: 1.5;
-}
 .info-section {
   margin-top: 28px;
 }
@@ -711,36 +692,6 @@ abbr {
 .round:last-child {
   margin-bottom: 0;
 }
-.players-meeting {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin: 18px 0 24px;
-  padding: 14px 16px;
-  border: 1px solid #e8c5ae;
-  border-left: 4px solid var(--orange);
-  border-radius: 6px;
-  background: #fff3ea;
-  color: var(--ink);
-}
-.players-meeting > svg {
-  flex: 0 0 auto;
-  color: var(--orange);
-  margin-top: 2px;
-}
-.players-meeting h2 {
-  font-size: 15px;
-  line-height: 1.4;
-}
-.players-meeting p {
-  margin-top: 4px;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--muted);
-}
-.players-meeting strong {
-  color: var(--ink);
-}
 .round-heading {
   display: flex;
   gap: 12px;
@@ -894,12 +845,6 @@ abbr {
   font-size: 11px;
   font-weight: 600;
 }
-.match-scoreboards {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
 .match-referee {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -918,11 +863,6 @@ abbr {
   margin-top: 12px;
   background: #fff4e9;
   font-size: 13px;
-}
-.match-scoreboards .match-scoreboard {
-  grid-column: auto;
-  padding-inline: 8px;
-  font-size: 12px;
 }
 .scoreboard-guide {
   margin-bottom: 24px;
