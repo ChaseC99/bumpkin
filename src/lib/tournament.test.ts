@@ -44,7 +44,11 @@ test('scoreboard links preserve recorded score order and wait for known playoff 
   assert.equal(params.get('scoreB'), '26');
   assert.equal(buildScoreboardUrl(undefined, teams[0]), null);
   assert.equal(buildScoreboardUrl(teams[0], undefined), null);
-  const pending = buildPlayoffSchedule(teams, matches);
+  const pending = buildPlayoffSchedule(teams, matches.map((match) => ({
+    ...match,
+    status: 'scheduled',
+    scores: [null, null],
+  })));
   for (const game of pending.games) {
     assert.equal(buildScoreboardUrl(
       teams.find((team) => team.id === game.home.teamId),
