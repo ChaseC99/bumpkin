@@ -221,7 +221,7 @@ const matches: Match[] = [
     awayId: 't4',
     refereeId: 't2',
     status: 'final',
-    scores: [[21, 17], [21, 9]],
+    scores: [[21, 17], [9, 21]],
   },
   {
     id: 'r3-c3',
