@@ -1,4 +1,4 @@
-import type { GameScore, Match, Pool, Team } from '../data/tournament.ts';
+import type { GameScore, Match, PlayoffResult, Pool, Team } from '../data/tournament.ts';
 
 export function buildScoreboardUrl(
   home: Team | undefined,
@@ -120,6 +120,9 @@ export interface PlayoffGame {
   home: PlayoffParticipant;
   away: PlayoffParticipant;
   referee: string;
+  status: 'scheduled' | 'final';
+  scores: GameScore[];
+  winnerId?: string;
 }
 
 export interface PlayoffSchedule {
@@ -130,6 +133,7 @@ export interface PlayoffSchedule {
 export function buildPlayoffSchedule(
   teams: Team[],
   matches: Match[],
+  results: PlayoffResult[] = [],
 ): PlayoffSchedule {
   const poolMatches = matches.filter((match) => match.stage === 'pool');
   const ready =
@@ -144,7 +148,10 @@ export function buildPlayoffSchedule(
     ready && row
       ? { teamId: row.team.id, label: row.team.name }
       : { label: `Seed ${seed} · pending` };
-  const winner = (label: string): PlayoffParticipant => ({ label });
+  const winner = (game: PlayoffGame, label: string): PlayoffParticipant => {
+    const team = teams.find((team) => team.id === game.winnerId);
+    return team ? { teamId: team.id, label: team.name } : { label };
+  };
   const referee = ready
     ? standings[4]?.team.players.join(', ') ?? 'TBD'
     : '5th place team · pending';
@@ -157,24 +164,40 @@ export function buildPlayoffSchedule(
     home: PlayoffParticipant,
     away: PlayoffParticipant,
     gameReferee = round === 1 ? referee : 'TBD',
-  ): PlayoffGame => ({
-    id,
-    round,
-    time,
-    court,
-    title,
-    home,
-    away,
-    referee: gameReferee,
-  });
+  ): PlayoffGame => {
+    const result = results.find((result) => result.id === id &&
+      result.homeId === home.teamId && result.awayId === away.teamId);
+    const wins = [0, 0];
+    const valid = result?.scores.every((score) => {
+      if (!score || !isCompletedScore(score) || wins.includes(2)) return false;
+      wins[score[0] > score[1] ? 0 : 1]++;
+      return true;
+    }) && wins.includes(2);
+    return {
+      id,
+      round,
+      time,
+      court,
+      title,
+      home,
+      away,
+      referee: gameReferee,
+      status: valid ? 'final' : 'scheduled',
+      scores: valid ? result!.scores.filter((score) => score !== undefined) : [null, null],
+      winnerId: valid ? (wins[0] === 2 ? home.teamId : away.teamId) : undefined,
+    };
+  };
+  const semifinal1 = game('playoff-r1-c1', 1, '13:30', 1, 'Upper bracket · Semifinal 1', participant(standings[0], 1), participant(standings[3], 4));
+  const semifinal2 = game('playoff-r1-c2', 1, '13:30', 2, 'Upper bracket · Semifinal 2', participant(standings[1], 2), participant(standings[2], 3));
+  const lowerSemifinal = game('playoff-r1-c3', 1, '13:30', 3, 'Lower bracket · Semifinal', participant(standings[5], 6), participant(standings[6], 7));
   return {
     ready,
     games: [
-      game('playoff-r1-c1', 1, '13:30', 1, 'Upper bracket · Semifinal 1', participant(standings[0], 1), participant(standings[3], 4)),
-      game('playoff-r1-c2', 1, '13:30', 2, 'Upper bracket · Semifinal 2', participant(standings[1], 2), participant(standings[2], 3)),
-      game('playoff-r1-c3', 1, '13:30', 3, 'Lower bracket · Semifinal', participant(standings[5], 6), participant(standings[6], 7)),
-      game('playoff-r2-c1', 2, '14:30', 1, 'Upper bracket championship', winner('Winner of upper semifinal 1'), winner('Winner of upper semifinal 2')),
-      game('playoff-r2-c2', 2, '14:30', 2, 'Lower bracket championship', participant(standings[4], 5), winner('Winner of lower semifinal')),
+      semifinal1,
+      semifinal2,
+      lowerSemifinal,
+      game('playoff-r2-c1', 2, '14:30', 1, 'Upper bracket championship', winner(semifinal1, 'Winner of upper semifinal 1'), winner(semifinal2, 'Winner of upper semifinal 2')),
+      game('playoff-r2-c2', 2, '14:30', 2, 'Lower bracket championship', participant(standings[4], 5), winner(lowerSemifinal, 'Winner of lower semifinal')),
     ],
   };
 }

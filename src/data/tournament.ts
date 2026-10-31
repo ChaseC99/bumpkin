@@ -35,10 +35,18 @@ export interface Match {
   scores: [GameScore, GameScore];
 }
 
+export interface PlayoffResult {
+  id: string;
+  homeId: string;
+  awayId: string;
+  scores: [[number, number], [number, number], [number, number]?];
+}
+
 export interface TournamentData {
   mode: 'demo';
   teams: Team[];
   matches: Match[];
+  playoffResults: PlayoffResult[];
 }
 
 export const event = {
@@ -266,5 +274,20 @@ const matches: Match[] = [
 
 // Data boundary for a future Supabase adapter. No UI component talks to a database.
 export async function getTournamentData(): Promise<TournamentData> {
-  return { mode: 'demo', teams, matches };
+  return { mode: 'demo', teams, matches, playoffResults };
 }
+
+const playoffResults: PlayoffResult[] = [
+  {
+    id: 'playoff-r1-c1',
+    homeId: 't3',
+    awayId: 't4',
+    scores: [[18, 21], [19, 21]],
+  },
+  {
+    id: 'playoff-r1-c2',
+    homeId: 't5',
+    awayId: 't2',
+    scores: [[22, 20], [11, 21], [10, 15]],
+  },
+];

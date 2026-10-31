@@ -34,7 +34,7 @@ function ScoreboardLink({ href, matchup }: { href: string | null; matchup: strin
   );
 }
 
-export default function Schedule({ teams, matches }: TournamentData) {
+export default function Schedule({ teams, matches, playoffResults }: TournamentData) {
   const [query, setQuery] = useState('');
   const [teamId, setTeamId] = useState('');
   const [stage, setStage] = useState<'all' | 'pool' | 'playoff'>('all');
@@ -65,7 +65,7 @@ export default function Schedule({ teams, matches }: TournamentData) {
   }, [query, teamId, stage, ready]);
 
   const filtered = filterMatches(matches, teams, query, teamId, stage);
-  const playoffSchedule = buildPlayoffSchedule(teams, matches);
+  const playoffSchedule = buildPlayoffSchedule(teams, matches, playoffResults);
   const matchCount = stage === 'playoff' ? playoffSchedule.games.length : filtered.length;
   const rounds = [...new Set(filtered.map((match) => match.round))];
   const hasFilters = Boolean(query || teamId || stage !== 'all');
@@ -83,9 +83,14 @@ export default function Schedule({ teams, matches }: TournamentData) {
           <span className="court-dot" />
           Court {game.court}
         </span>
-        <span className="match-status scheduled">Upcoming</span>
+        <span className={`match-status ${game.status}`}>
+          {game.status === 'final' ? <><Icon name="check" size={12} /> Final</> : 'Upcoming'}
+        </span>
       </div>
       <p className="playoff-game-title">{game.title}</p>
+      <div className="match-games-heading" style={{ gridTemplateColumns: `repeat(${game.scores.length}, 36px)` }} aria-hidden="true">
+        {game.scores.map((_, index) => <span key={index}>Game {index + 1}</span>)}
+      </div>
       {[game.home, game.away].map((participant, index) => {
         const team = teams.find((candidate) => candidate.id === participant.teamId);
         return (
@@ -99,20 +104,30 @@ export default function Schedule({ teams, matches }: TournamentData) {
               <h3>{team?.name ?? participant.label}</h3>
               {team && <p>{team.players.map((name) => name.split(' ')[0]).join(' · ')}</p>}
             </div>
-            <span className="match-score">
-              <span className="score-dash">—</span>
+            <span className="match-game-scores" style={{ gridTemplateColumns: `repeat(${game.scores.length}, 36px)` }}>
+              {game.scores.map((score, gameIndex) => (
+                <span
+                  key={gameIndex}
+                  className={`match-score ${score && score[index] > score[1 - index] ? 'winner' : ''}`}
+                  aria-label={`Game ${gameIndex + 1}: ${score ? score[index] : 'not played'}`}
+                >
+                  {score ? score[index] : <span className="score-dash">—</span>}
+                </span>
+              ))}
             </span>
           </div>
         );
       })}
       <RefereeFooter assignment={game.referee.replaceAll(', ', ' · ')}>
-        <ScoreboardLink
-          href={buildScoreboardUrl(
-            teams.find((team) => team.id === game.home.teamId),
-            teams.find((team) => team.id === game.away.teamId),
-          )}
-          matchup={`${game.home.label} versus ${game.away.label}`}
-        />
+        {game.status !== 'final' && (
+          <ScoreboardLink
+            href={buildScoreboardUrl(
+              teams.find((team) => team.id === game.home.teamId),
+              teams.find((team) => team.id === game.away.teamId),
+            )}
+            matchup={`${game.home.label} versus ${game.away.label}`}
+          />
+        )}
       </RefereeFooter>
     </article>
   );

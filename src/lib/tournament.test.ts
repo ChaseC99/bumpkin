@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getTournamentData, type GameScore, type Match } from '../data/tournament.ts';
+import { getTournamentData, type GameScore, type Match, type PlayoffResult } from '../data/tournament.ts';
 import {
   buildPlayoffSchedule,
   buildScoreboardUrl,
@@ -262,4 +262,53 @@ test('win percentage takes priority over total wins for playoff seeding', () => 
   assert.equal(t2.wins, 4);
   assert.equal(t2.winPercentage, 1);
   assert.ok(standings.indexOf(t2) < standings.indexOf(t1));
+});
+
+test('playoff results show all games and advance best-of-three winners into the championship', () => {
+  const seeded = buildPlayoffSchedule(teams, matches);
+  const results: PlayoffResult[] = seeded.games.slice(0, 2).map((game, index) => ({
+    id: game.id,
+    homeId: game.home.teamId!,
+    awayId: game.away.teamId!,
+    scores: index === 0 ? [[18, 21], [19, 21]] : [[22, 20], [11, 21], [10, 15]],
+  }));
+  const schedule = buildPlayoffSchedule(teams, matches, results);
+  for (const [index, result] of results.entries()) {
+    assert.equal(schedule.games[index].status, 'final');
+    assert.deepEqual(schedule.games[index].scores, result.scores);
+    assert.equal(schedule.games[index].winnerId, result.awayId);
+  }
+  const final = schedule.games.find((game) => game.id === 'playoff-r2-c1')!;
+  assert.equal(final.home.teamId, results[0].awayId);
+  assert.equal(final.away.teamId, results[1].awayId);
+  assert.equal(final.status, 'scheduled');
+  assert.ok(buildScoreboardUrl(
+    teams.find((team) => team.id === final.home.teamId),
+    teams.find((team) => team.id === final.away.teamId),
+  ));
+  assert.equal(schedule.games[2].status, 'scheduled');
+  assert.equal(schedule.games[4].away.teamId, undefined);
+});
+
+test('unresolved, invalid, or mismatched playoff results cannot advance a team', () => {
+  const semifinal = buildPlayoffSchedule(teams, matches).games[0];
+  const result: PlayoffResult = {
+    id: semifinal.id,
+    homeId: semifinal.home.teamId!,
+    awayId: semifinal.away.teamId!,
+    scores: [[21, 18], [19, 21]],
+  };
+  const cases: PlayoffResult[] = [
+    result,
+    { ...result, scores: [[21, 21], [19, 21]] },
+    { ...result, scores: [[-1, 21], [19, 21]] },
+    { ...result, scores: [[18, 21], [19, 21], [15, 10]] },
+    { ...result, homeId: result.awayId, awayId: result.homeId, scores: [[18, 21], [19, 21]] },
+  ];
+  for (const candidate of cases) {
+    const schedule = buildPlayoffSchedule(teams, matches, [candidate]);
+    assert.equal(schedule.games[0].status, 'scheduled');
+    assert.equal(schedule.games[0].winnerId, undefined);
+    assert.equal(schedule.games[3].home.teamId, undefined);
+  }
 });
