@@ -207,8 +207,8 @@ const matches: Match[] = [
     homeId: 't1',
     awayId: 't6',
     refereeId: 't2',
-    status: 'scheduled',
-    scores: [null, null],
+    status: 'final',
+    scores: [[20, 22], [14, 21]],
   },
   {
     id: 'r3-c2',
@@ -220,8 +220,8 @@ const matches: Match[] = [
     homeId: 't3',
     awayId: 't4',
     refereeId: 't2',
-    status: 'scheduled',
-    scores: [null, null],
+    status: 'final',
+    scores: [[21, 17], [21, 9]],
   },
   {
     id: 'r3-c3',
@@ -233,8 +233,8 @@ const matches: Match[] = [
     homeId: 't5',
     awayId: 't7',
     refereeId: 't2',
-    status: 'scheduled',
-    scores: [null, null],
+    status: 'final',
+    scores: [[21, 17], [21, 12]],
   },
   {
     id: 'r4-c1',
